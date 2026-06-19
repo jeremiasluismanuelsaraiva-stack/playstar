@@ -11,6 +11,9 @@ const YOUTUBE_API_KEY = "SUA_CHAVE_GOOGLE"; // substitua pelo AIzaSy...
 const API_CYBERHOST = "https://api.cyberhost.online";
 const API_KEY_CYBERHOST = "cyber_f857ee31300990f3451d1a6826f9913b74d52f0a"; // substitua pelo cyber_...
 
+// Servir frontend (HTML/JS/CSS)
+app.use(express.static("frontend"));
+
 // Função para buscar músicas no YouTube (Google API)
 async function buscarMusica(nome) {
   const youtube = google.youtube("v3");
