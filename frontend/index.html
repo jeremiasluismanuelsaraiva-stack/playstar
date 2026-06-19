@@ -2,13 +2,63 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <title>Buscar Música</title>
+  <title>🎵 Meu Player de Música</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1db954, #191414);
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      width: 300px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #1db954;
+      color: #fff;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #14833b;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: rgba(255,255,255,0.1);
+      margin: 10px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .controls {
+      margin-top: 10px;
+    }
+    audio, video {
+      margin-top: 10px;
+      width: 80%;
+    }
+  </style>
 </head>
 <body>
-  <h1>🎵 Buscar no YouTube</h1>
+  <h1>🎵 Meu Player de Música</h1>
   <input id="busca" placeholder="Digite o nome da música">
-  <button onclick="buscarMusica()">Pesquisar</button>
+  <button onclick="buscarMusica()">🔎 Buscar</button>
   <ul id="resultados"></ul>
+
   <script src="script.js"></script>
 </body>
 </html>
+
