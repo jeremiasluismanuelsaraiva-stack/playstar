@@ -17,14 +17,10 @@
 </head>
 
 
-
 <body>
 
 
-
 <div class="container">
-
-
 
 
 
@@ -33,9 +29,6 @@
 <h1>
 🎵 Meu Player
 </h1>
-
-
-
 
 
 
@@ -53,14 +46,14 @@
 
 
 <input 
-id="email" 
+id="email"
 placeholder="Gmail">
 
 
 
 <input 
-id="senha" 
-type="password" 
+id="senha"
+type="password"
 placeholder="Senha">
 
 
@@ -80,7 +73,6 @@ Criar Conta
 
 
 
-
 <button onclick="entrar()">
 
 Entrar
@@ -94,7 +86,8 @@ Entrar
 <button onclick="googleLogin()" class="google-btn">
 
 
-<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+<img 
+src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
 
 
 Continuar com Google
@@ -107,7 +100,6 @@ Continuar com Google
 </div>
 
 
-
 </div>
 
 
@@ -118,9 +110,13 @@ Continuar com Google
 
 
 
-<!-- USUARIO LOGADO -->
+<!-- USUARIO -->
 
-<div id="userArea" style="display:none;" class="card">
+
+<div 
+id="userArea"
+style="display:none;"
+class="card">
 
 
 <p id="usuario"></p>
@@ -146,6 +142,7 @@ Continuar com Google
 
 
 <!-- PESQUISA -->
+
 
 <div class="search">
 
@@ -181,6 +178,7 @@ placeholder="Pesquisar música ou colar link">
 
 <!-- DOWNLOAD -->
 
+
 <div class="buttons">
 
 
@@ -215,6 +213,7 @@ placeholder="Pesquisar música ou colar link">
 
 <!-- PLAYER -->
 
+
 <div id="resultado">
 
 
@@ -246,7 +245,9 @@ placeholder="Pesquisar música ou colar link">
 
 <!-- CONTROLES -->
 
+
 <div class="buttons">
+
 
 
 <button onclick="anterior()">
@@ -254,6 +255,7 @@ placeholder="Pesquisar música ou colar link">
 ⏮️ Anterior
 
 </button>
+
 
 
 
@@ -277,6 +279,7 @@ placeholder="Pesquisar música ou colar link">
 
 
 <!-- HISTORICO -->
+
 
 <div id="historico" class="card">
 
@@ -317,10 +320,10 @@ Nenhuma música ainda
 
 
 
-
 <script 
-type="module" 
+type="module"
 src="script.js">
+
 </script>
 
 
