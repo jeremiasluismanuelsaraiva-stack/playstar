@@ -1,371 +1,395 @@
-const https = require("https");
+import "./auth.js";
 
+import { auth } from "./firebase.js";
 
-const API_CYBERHOST =
-"https://api.cyberhost.online";
+import {
+guardarHistorico,
+carregarHistorico
+} from "./historico.js";
 
 
-const API_KEY_CYBERHOST =
-"cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
+console.log("SCRIPT CARREGADO");
 
 
+const resultado =
+document.getElementById("resultado");
 
-function postCyber(endpoint, body){
 
+let historico = [];
+let atual = -1;
 
-return new Promise((resolve,reject)=>{
 
 
-const data = JSON.stringify({
-
-api_key: API_KEY_CYBERHOST,
-
-...body
-
-});
-
-
-
-const req = https.request(
-
-API_CYBERHOST + endpoint,
-
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"application/json",
-
-"Content-Length":
-Buffer.byteLength(data)
-
-}
-
-},
-
-
-
-(res)=>{
-
-
-let result="";
-
-
-
-res.on("data",chunk=>{
-
-result += chunk;
-
-});
-
-
-
-res.on("end",()=>{
-
-
-console.log(
-"CYBER:",
-result
-);
-
-
-
-try{
-
-
-resolve(JSON.parse(result));
-
-
-}catch(e){
-
-
-reject(
-new Error(result)
-);
-
-
-}
-
-
-
-});
-
-
-
-}
-
-
-
-);
-
-
-
-req.on(
-"error",
-reject
-);
-
-
-
-req.write(data);
-
-req.end();
-
-
-
-});
-
-
-}
-
-
-
-
-
-module.exports = async(req,res)=>{
-
-
-res.setHeader(
-"Content-Type",
-"application/json"
-);
-
-
-
-try{
+async function baixar(tipo){
 
 
 const url =
-req.query.url;
-
-
-const tipo =
-req.query.tipo || "audio";
-
+document.getElementById("url").value.trim();
 
 
 if(!url){
 
+alert("Cole um link");
 
-return res.json({
+return;
 
-sucesso:false,
+}
 
-erro:"Sem URL"
 
-});
+resultado.innerHTML = `
 
+<div class="card">
+
+⏳ Processando...
+
+</div>
+
+`;
+
+
+
+try{
+
+
+const resposta = await fetch(
+
+"/api/baixar?url="+
+encodeURIComponent(url)+
+"&tipo="+tipo
+
+);
+
+
+
+const texto =
+await resposta.text();
+
+
+
+console.log("API:",texto);
+
+
+
+let data;
+
+
+try{
+
+data = JSON.parse(texto);
+
+}catch{
+
+throw new Error(texto);
+
+}
+
+
+
+if(!data.sucesso){
+
+throw new Error(data.erro);
 
 }
 
 
 
 
+const item={
 
-let endpoint = "";
+
+nome:
+data.title ||
+data.titulo ||
+"🎵 Música",
 
 
-let body = {
+url:url,
 
-url:url
+
+download:data.download,
+
+
+tipo:tipo,
+
+
+data:
+new Date().toLocaleString()
+
 
 };
 
 
 
 
+historico.push(item);
 
 
-if(
-url.includes("youtube.com") ||
-url.includes("youtu.be")
-){
-
-
-endpoint =
-"/youtube/download";
+atual =
+historico.length-1;
 
 
 
-body.type =
-tipo === "video"
-?
-"video"
-:
-"audio";
+// guardar Firebase
 
+try{
 
+await guardarHistorico(item);
 
-body.format =
-tipo === "video"
-?
-"mp4"
-:
-"mp3";
+}catch(e){
 
-
-
-body.quality="720";
-
-
-
-}
-
-
-
-
-
-
-
-else if(
-url.includes("tiktok.com")
-){
-
-
-endpoint =
-"/tiktok/download";
-
-
-}
-
-
-
-
-
-
-
-else if(
-url.includes("facebook.com") ||
-url.includes("fb.watch")
-){
-
-
-endpoint =
-"/facebook/download";
-
-
-}
-
-
-
-
-
-
-
-else{
-
-
-return res.json({
-
-sucesso:false,
-
-erro:"Link não suportado"
-
-});
-
-
-}
-
-
-
-
-
-
-
-
-const data =
-await postCyber(
-endpoint,
-body
+console.log(
+"Erro histórico:",
+e.message
 );
 
-
-
-
-
-
-const link =
-
-data.file ||
-
-data.download ||
-
-data.url ||
-
-data.result;
-
-
-
-
-
-
-
-if(!link){
-
-
-return res.json({
-
-sucesso:false,
-
-erro:"Sem vídeo retornado pela API",
-
-resposta:data
-
-});
-
-
 }
 
 
 
-
-
-
-
-
-return res.json({
-
-sucesso:true,
-
-download:
-
-link.startsWith("http")
-
-?
-
-link
-
-:
-
-API_CYBERHOST + link
-
-
-
-});
-
-
-
-
+mostrarPlayer(item);
 
 
 
 }catch(e){
 
 
+resultado.innerHTML = `
 
-return res.status(500).json({
+<div class="card">
 
-sucesso:false,
+❌ ${e.message}
 
-erro:e.message
+</div>
 
-});
+`;
+
+}
 
 
 }
 
 
 
-};
+
+
+
+function mostrarPlayer(item){
+
+
+resultado.innerHTML = `
+
+<div class="card">
+
+
+<h2>${item.nome}</h2>
+
+
+<p>${item.data || ""}</p>
+
+
+
+${
+item.tipo==="audio"
+
+?
+
+`
+
+<audio controls autoplay style="width:100%">
+
+<source src="${item.download}"
+type="audio/mpeg">
+
+</audio>
+
+`
+
+:
+
+`
+
+<video controls autoplay playsinline width="100%">
+
+<source src="${item.download}"
+type="video/mp4">
+
+</video>
+
+`
+
+}
+
+
+
+<br><br>
+
+
+
+<button onclick="anterior()">
+
+⏮️ Anterior
+
+</button>
+
+
+
+<button onclick="proximo()">
+
+⏭️ Próximo
+
+</button>
+
+
+
+<br><br>
+
+
+
+<a href="${item.download}" target="_blank">
+
+⬇️ Abrir ficheiro
+
+</a>
+
+
+</div>
+
+`;
+
+}
+
+
+
+
+
+
+function proximo(){
+
+
+if(atual < historico.length-1){
+
+atual++;
+
+mostrarPlayer(
+historico[atual]
+);
+
+}else{
+
+alert("Não existe próximo");
+
+}
+
+}
+
+
+
+
+
+function anterior(){
+
+
+if(atual>0){
+
+atual--;
+
+mostrarPlayer(
+historico[atual]
+);
+
+}else{
+
+alert("É o primeiro");
+
+}
+
+}
+
+
+
+
+
+// botões HTML
+
+window.baixarAudio =
+()=>baixar("audio");
+
+
+window.baixarVideo =
+()=>baixar("video");
+
+
+window.proximo =
+proximo;
+
+
+window.anterior =
+anterior;
+
+
+
+
+
+
+
+// LOGIN FIREBASE
+
+
+auth.onAuthStateChanged(
+
+async user=>{
+
+
+if(user){
+
+
+document.getElementById(
+"loginArea"
+).style.display="none";
+
+
+
+document.getElementById(
+"userArea"
+).style.display="block";
+
+
+
+document.getElementById(
+"usuario"
+).innerHTML =
+
+"👤 "+user.email;
+
+
+
+historico =
+await carregarHistorico();
+
+
+
+console.log(
+"Histórico carregado",
+historico
+);
+
+
+
+}else{
+
+
+document.getElementById(
+"loginArea"
+).style.display="block";
+
+
+document.getElementById(
+"userArea"
+).style.display="none";
+
+
+}
+
+
+
+});
