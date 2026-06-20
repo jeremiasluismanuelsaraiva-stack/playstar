@@ -35,11 +35,14 @@ return;
 
 
 
-resultado.innerHTML =
-`
+resultado.innerHTML = `
+
 <div class="card">
+
 ⏳ Processando...
+
 </div>
+
 `;
 
 
@@ -47,12 +50,36 @@ resultado.innerHTML =
 try{
 
 
-const res =
-await fetch(
+const controller = new AbortController();
+
+
+const tempo = setTimeout(()=>{
+
+controller.abort();
+
+},60000);
+
+
+
+
+
+const res = await fetch(
+
 "/api/baixar?url="+
 encodeURIComponent(url)+
-"&tipo="+tipo
+"&tipo="+tipo,
+
+{
+
+signal:controller.signal
+
+}
+
 );
+
+
+
+clearTimeout(tempo);
 
 
 
@@ -61,7 +88,7 @@ await res.text();
 
 
 
-console.log("API:", texto);
+console.log("RESPOSTA API:",texto);
 
 
 
@@ -72,7 +99,9 @@ try{
 
 data = JSON.parse(texto);
 
-}catch(e){
+}
+
+catch{
 
 throw new Error(texto);
 
@@ -90,7 +119,8 @@ throw new Error(data.erro);
 
 
 
-let item={
+const item={
+
 
 nome:"🎵 Música",
 
@@ -102,7 +132,9 @@ tipo:tipo,
 
 data:new Date().toLocaleString()
 
+
 };
+
 
 
 
@@ -111,6 +143,7 @@ lista.push(item);
 
 atual =
 lista.length-1;
+
 
 
 
@@ -125,8 +158,26 @@ mostrar(item);
 }catch(e){
 
 
-resultado.innerHTML =
-`
+if(e.name==="AbortError"){
+
+
+resultado.innerHTML = `
+
+<div class="card">
+
+❌ Tempo excedido
+
+API demorou muito
+
+</div>
+
+`;
+
+
+}else{
+
+
+resultado.innerHTML = `
 
 <div class="card">
 
@@ -136,11 +187,15 @@ resultado.innerHTML =
 
 `;
 
-}
-
 
 }
 
+
+}
+
+
+
+}
 
 
 
@@ -156,27 +211,35 @@ resultado.innerHTML = `
 <h2>${item.nome}</h2>
 
 
+<p>${item.data || ""}</p>
+
+
+
 ${
 item.tipo==="audio"
 
 ?
 
 `
+
 <audio controls autoplay>
 
 <source src="${item.download}">
 
 </audio>
+
 `
 
 :
 
 `
+
 <video controls autoplay width="100%">
 
 <source src="${item.download}">
 
 </video>
+
 `
 
 }
@@ -188,7 +251,7 @@ item.tipo==="audio"
 
 <a href="${item.download}" target="_blank">
 
-⬇️ Abrir ficheiro
+⬇️ Abrir
 
 </a>
 
@@ -203,16 +266,14 @@ item.tipo==="audio"
 
 
 
+window.baixarAudio=()=>baixar("audio");
 
-window.baixarAudio = ()=>baixar("audio");
-
-window.baixarVideo = ()=>baixar("video");
-
+window.baixarVideo=()=>baixar("video");
 
 
 
 
-window.proximo = ()=>{
+window.proximo=()=>{
 
 
 if(atual < lista.length-1){
@@ -227,11 +288,10 @@ mostrar(lista[atual]);
 
 
 
+window.anterior=()=>{
 
-window.anterior = ()=>{
 
-
-if(atual > 0){
+if(atual>0){
 
 atual--;
 
@@ -240,7 +300,6 @@ mostrar(lista[atual]);
 }
 
 };
-
 
 
 
@@ -258,14 +317,14 @@ document.getElementById("loginArea").style.display="none";
 document.getElementById("userArea").style.display="block";
 
 
+
 document.getElementById("usuario").innerHTML =
 
 "👤 "+user.email;
 
 
 
-lista =
-await carregarHistorico();
+lista = await carregarHistorico();
 
 
 
