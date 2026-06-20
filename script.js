@@ -17,6 +17,8 @@ let atual = -1;
 
 
 
+// ================= BAIXAR =================
+
 async function baixar(tipo){
 
 
@@ -27,7 +29,7 @@ document.getElementById("url").value.trim();
 
 if(!url){
 
-alert("Cole link");
+alert("Cole link ou pesquise");
 
 return;
 
@@ -61,6 +63,7 @@ controller.abort();
 
 
 
+
 const res = await fetch(
 
 "/api/baixar?url="+
@@ -77,10 +80,7 @@ signal:controller.signal
 
 
 
-console.log(
-"STATUS API:",
-res.status
-);
+clearTimeout(tempo);
 
 
 
@@ -89,54 +89,34 @@ await res.text();
 
 
 
-console.log(
-"RESPOSTA API:",
-texto
-);
-
-
-
-if(!texto){
-
-throw new Error(
-"API não respondeu"
-);
-
-}
+console.log("API:",texto);
 
 
 
 let data;
 
 
-
 try{
-
 
 data = JSON.parse(texto);
 
+}
 
-}catch(e){
+catch{
 
-
-throw new Error(
-"Resposta inválida: "+texto
-);
-
+throw new Error(texto);
 
 }
+
 
 
 
 if(!data.sucesso){
 
-
-throw new Error(
-data.erro || "Erro desconhecido"
-);
-
+throw new Error(data.erro);
 
 }
+
 
 
 
@@ -177,17 +157,13 @@ lista.length-1;
 
 
 
-
 try{
 
 await guardarHistorico(item);
 
 }catch(e){
 
-console.log(
-"Erro ao guardar histórico:",
-e.message
-);
+console.log(e);
 
 }
 
@@ -198,34 +174,8 @@ mostrar(item);
 
 
 
-clearTimeout(tempo);
-
-
-
 }catch(e){
 
-
-clearTimeout(tempo);
-
-
-
-if(e.name==="AbortError"){
-
-
-resultado.innerHTML = `
-
-<div class="card">
-
-❌ Tempo excedido
-
-A API demorou muito
-
-</div>
-
-`;
-
-
-}else{
 
 
 resultado.innerHTML = `
@@ -246,16 +196,13 @@ resultado.innerHTML = `
 
 
 
-}
 
 
-
-
+// ================= PLAYER =================
 
 
 
 function mostrar(item){
-
 
 
 resultado.innerHTML = `
@@ -270,7 +217,6 @@ ${item.nome}
 </h2>
 
 
-
 <p>
 
 ${item.data || ""}
@@ -279,63 +225,58 @@ ${item.data || ""}
 
 
 
-
 ${
 item.tipo==="audio"
 
-
 ?
-
 
 `
 
-<audio 
-controls 
-autoplay
-style="width:100%">
+<audio controls autoplay style="width:100%">
 
 
-<source 
-src="${item.download}"
-type="audio/mpeg">
+<source src="${item.download}" type="audio/mpeg">
 
 
 </audio>
 
 `
 
-
-
 :
-
 
 `
 
-<video
-
-controls
-
-autoplay
-
-playsinline
-
-width="100%">
+<video controls autoplay playsinline width="100%">
 
 
-<source
-
-src="${item.download}"
-
-type="video/mp4">
+<source src="${item.download}" type="video/mp4">
 
 
 </video>
-
 
 `
 
 }
 
+
+
+<br><br>
+
+
+
+<button onclick="anterior()">
+
+⏮️ Anterior
+
+</button>
+
+
+
+<button onclick="proximo()">
+
+⏭️ Próximo
+
+</button>
 
 
 
@@ -344,15 +285,9 @@ type="video/mp4">
 
 
 
-<a
-
-href="${item.download}"
-
-target="_blank">
-
+<a href="${item.download}" target="_blank">
 
 ⬇️ Abrir ficheiro
-
 
 </a>
 
@@ -362,9 +297,213 @@ target="_blank">
 
 `;
 
+
+
 }
 
 
+
+
+
+// ================= PESQUISAR =================
+
+
+
+async function pesquisar(){
+
+
+const texto =
+document.getElementById("url").value.trim();
+
+
+
+if(!texto){
+
+alert("Digite nome da música");
+
+return;
+
+}
+
+
+
+resultado.innerHTML = `
+
+<div class="card">
+
+🔎 Pesquisando...
+
+</div>
+
+`;
+
+
+
+try{
+
+
+const res = await fetch(
+
+"/api/pesquisar?q="+
+encodeURIComponent(texto)
+
+);
+
+
+
+const data =
+await res.json();
+
+
+
+if(!data.sucesso){
+
+throw new Error(data.erro);
+
+}
+
+
+
+
+resultado.innerHTML = "";
+
+
+
+
+data.resultados.forEach(video=>{
+
+
+resultado.innerHTML += `
+
+<div class="card">
+
+
+<h3>
+
+${video.titulo}
+
+</h3>
+
+
+
+<p>
+
+🎤 ${video.autor}
+
+</p>
+
+
+
+<button onclick="baixarLink('${video.url}','audio')">
+
+🎧 Áudio
+
+</button>
+
+
+
+<button onclick="baixarLink('${video.url}','video')">
+
+🎬 Vídeo
+
+</button>
+
+
+
+</div>
+
+`;
+
+
+
+});
+
+
+
+
+}catch(e){
+
+
+resultado.innerHTML = `
+
+<div class="card">
+
+❌ ${e.message}
+
+</div>
+
+`;
+
+}
+
+
+}
+
+
+
+
+function baixarLink(link,tipo){
+
+
+document.getElementById("url").value = link;
+
+
+baixar(tipo);
+
+
+}
+
+
+
+
+
+// ================= NEXT =================
+
+
+
+function proximo(){
+
+
+if(atual < lista.length-1){
+
+atual++;
+
+mostrar(lista[atual]);
+
+}else{
+
+alert("Não existe próximo");
+
+}
+
+}
+
+
+
+
+
+function anterior(){
+
+
+if(atual > 0){
+
+atual--;
+
+mostrar(lista[atual]);
+
+}else{
+
+alert("É o primeiro");
+
+}
+
+}
+
+
+
+
+
+// ================= BOTÕES HTML =================
 
 
 
@@ -372,105 +511,52 @@ window.baixarAudio =
 ()=>baixar("audio");
 
 
-
 window.baixarVideo =
 ()=>baixar("video");
 
 
+window.pesquisar =
+pesquisar;
 
 
+window.baixarLink =
+baixarLink;
 
 
-window.proximo = ()=>{
+window.proximo =
+proximo;
 
 
-if(atual < lista.length-1){
-
-
-atual++;
-
-
-mostrar(lista[atual]);
-
-
-}else{
-
-
-alert(
-"Não existe próximo"
-);
-
-
-}
-
-
-};
+window.anterior =
+anterior;
 
 
 
 
 
 
-window.anterior = ()=>{
-
-
-if(atual > 0){
-
-
-atual--;
-
-
-mostrar(lista[atual]);
-
-
-}else{
-
-
-alert(
-"É o primeiro"
-);
-
-
-}
-
-
-};
-
-
-
-
-
+// ================= LOGIN =================
 
 
 
 auth.onAuthStateChanged(
+
 async user=>{
 
 
 if(user){
 
 
-
-document.getElementById(
-"loginArea"
-).style.display="none";
+document.getElementById("loginArea").style.display="none";
 
 
-
-document.getElementById(
-"userArea"
-).style.display="block";
+document.getElementById("userArea").style.display="block";
 
 
 
-
-document.getElementById(
-"usuario"
-).innerHTML =
-
+document.getElementById("usuario").innerHTML =
 
 "👤 "+user.email;
-
 
 
 
