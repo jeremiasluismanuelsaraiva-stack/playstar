@@ -61,8 +61,6 @@ controller.abort();
 
 
 
-
-
 const res = await fetch(
 
 "/api/baixar?url="+
@@ -79,7 +77,10 @@ signal:controller.signal
 
 
 
-clearTimeout(tempo);
+console.log(
+"STATUS API:",
+res.status
+);
 
 
 
@@ -88,31 +89,52 @@ await res.text();
 
 
 
-console.log("RESPOSTA API:",texto);
+console.log(
+"RESPOSTA API:",
+texto
+);
+
+
+
+if(!texto){
+
+throw new Error(
+"API não respondeu"
+);
+
+}
 
 
 
 let data;
 
 
+
 try{
+
 
 data = JSON.parse(texto);
 
+
+}catch(e){
+
+
+throw new Error(
+"Resposta inválida: "+texto
+);
+
+
 }
-
-catch{
-
-throw new Error(texto);
-
-}
-
 
 
 
 if(!data.sucesso){
 
-throw new Error(data.erro);
+
+throw new Error(
+data.erro || "Erro desconhecido"
+);
+
 
 }
 
@@ -122,18 +144,27 @@ throw new Error(data.erro);
 const item={
 
 
-nome:"🎵 Música",
+nome:
+data.title ||
+data.titulo ||
+"🎵 Música",
+
 
 url:url,
 
+
 download:data.download,
+
 
 tipo:tipo,
 
-data:new Date().toLocaleString()
+
+data:
+new Date().toLocaleString()
 
 
 };
+
 
 
 
@@ -147,7 +178,19 @@ lista.length-1;
 
 
 
+try{
+
 await guardarHistorico(item);
+
+}catch(e){
+
+console.log(
+"Erro ao guardar histórico:",
+e.message
+);
+
+}
+
 
 
 
@@ -155,7 +198,15 @@ mostrar(item);
 
 
 
+clearTimeout(tempo);
+
+
+
 }catch(e){
+
+
+clearTimeout(tempo);
+
 
 
 if(e.name==="AbortError"){
@@ -167,7 +218,7 @@ resultado.innerHTML = `
 
 ❌ Tempo excedido
 
-API demorou muito
+A API demorou muito
 
 </div>
 
@@ -187,15 +238,18 @@ resultado.innerHTML = `
 
 `;
 
-
-}
-
-
 }
 
 
 
 }
+
+
+
+}
+
+
+
 
 
 
@@ -203,42 +257,80 @@ resultado.innerHTML = `
 function mostrar(item){
 
 
+
 resultado.innerHTML = `
 
 <div class="card">
 
 
-<h2>${item.nome}</h2>
+<h2>
+
+${item.nome}
+
+</h2>
 
 
-<p>${item.data || ""}</p>
+
+<p>
+
+${item.data || ""}
+
+</p>
+
 
 
 
 ${
 item.tipo==="audio"
 
+
 ?
+
 
 `
 
-<audio controls autoplay>
+<audio 
+controls 
+autoplay
+style="width:100%">
 
-<source src="${item.download}">
+
+<source 
+src="${item.download}"
+type="audio/mpeg">
+
 
 </audio>
 
 `
 
+
+
 :
+
 
 `
 
-<video controls autoplay width="100%">
+<video
 
-<source src="${item.download}">
+controls
+
+autoplay
+
+playsinline
+
+width="100%">
+
+
+<source
+
+src="${item.download}"
+
+type="video/mp4">
+
 
 </video>
+
 
 `
 
@@ -246,14 +338,24 @@ item.tipo==="audio"
 
 
 
+
+
 <br><br>
 
 
-<a href="${item.download}" target="_blank">
 
-⬇️ Abrir
+<a
+
+href="${item.download}"
+
+target="_blank">
+
+
+⬇️ Abrir ficheiro
+
 
 </a>
+
 
 
 </div>
@@ -266,38 +368,71 @@ item.tipo==="audio"
 
 
 
-window.baixarAudio=()=>baixar("audio");
-
-window.baixarVideo=()=>baixar("video");
-
+window.baixarAudio =
+()=>baixar("audio");
 
 
 
-window.proximo=()=>{
+window.baixarVideo =
+()=>baixar("video");
+
+
+
+
+
+
+window.proximo = ()=>{
 
 
 if(atual < lista.length-1){
 
+
 atual++;
+
 
 mostrar(lista[atual]);
 
+
+}else{
+
+
+alert(
+"Não existe próximo"
+);
+
+
 }
+
 
 };
 
 
 
-window.anterior=()=>{
 
 
-if(atual>0){
+
+window.anterior = ()=>{
+
+
+if(atual > 0){
+
 
 atual--;
 
+
 mostrar(lista[atual]);
 
+
+}else{
+
+
+alert(
+"É o primeiro"
+);
+
+
 }
+
 
 };
 
@@ -305,30 +440,47 @@ mostrar(lista[atual]);
 
 
 
-auth.onAuthStateChanged(async user=>{
+
+
+
+auth.onAuthStateChanged(
+async user=>{
 
 
 if(user){
 
 
-document.getElementById("loginArea").style.display="none";
+
+document.getElementById(
+"loginArea"
+).style.display="none";
 
 
-document.getElementById("userArea").style.display="block";
+
+document.getElementById(
+"userArea"
+).style.display="block";
 
 
 
-document.getElementById("usuario").innerHTML =
+
+document.getElementById(
+"usuario"
+).innerHTML =
+
 
 "👤 "+user.email;
 
 
 
-lista = await carregarHistorico();
+
+lista =
+await carregarHistorico();
 
 
 
 }
+
 
 
 });
