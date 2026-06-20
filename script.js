@@ -8,12 +8,16 @@ carregarHistorico
 } from "./historico.js";
 
 
+
 const resultado =
 document.getElementById("resultado");
 
 
 let lista = [];
+
 let atual = -1;
+
+
 
 
 
@@ -68,44 +72,18 @@ await res.text();
 
 
 
-console.log("RESPOSTA API:",texto);
+console.log("API:",texto);
 
 
 
-if(!texto){
-
-throw new Error(
-"API sem resposta"
-);
-
-}
-
-
-
-let data;
-
-
-try{
-
-data = JSON.parse(texto);
-
-}
-
-catch{
-
-throw new Error(
-"Resposta inválida da API"
-);
-
-}
+const data =
+JSON.parse(texto);
 
 
 
 if(!data.sucesso){
 
-throw new Error(
-data.erro || "Erro"
-);
+throw new Error(data.erro);
 
 }
 
@@ -142,23 +120,17 @@ new Date().toLocaleString()
 lista.push(item);
 
 
+
 atual =
 lista.length-1;
 
 
 
-try{
-
 await guardarHistorico(item);
 
-}catch(e){
 
-console.log(
-"Histórico:",
-e.message
-);
 
-}
+mostrarHistorico();
 
 
 
@@ -166,7 +138,9 @@ mostrar(item);
 
 
 
+
 }catch(e){
+
 
 
 resultado.innerHTML = `
@@ -179,13 +153,15 @@ resultado.innerHTML = `
 
 `;
 
-console.log(e);
-
 }
 
 
 
 }
+
+
+
+
 
 
 
@@ -196,6 +172,7 @@ console.log(e);
 
 
 function mostrar(item){
+
 
 
 resultado.innerHTML = `
@@ -214,22 +191,18 @@ resultado.innerHTML = `
 ${
 item.tipo==="audio"
 
-
 ?
 
 `
 
 <audio controls autoplay style="width:100%">
 
-
 <source src="${item.download}"
 type="audio/mpeg">
-
 
 </audio>
 
 `
-
 
 :
 
@@ -245,18 +218,14 @@ playsinline
 
 width="100%">
 
-
 <source src="${item.download}"
 type="video/mp4">
 
-
 </video>
-
 
 `
 
 }
-
 
 
 
@@ -277,7 +246,6 @@ type="video/mp4">
 ⏭️ Próximo
 
 </button>
-
 
 
 
@@ -303,6 +271,10 @@ type="video/mp4">
 
 
 
+
+
+
+
 // ================= PESQUISA =================
 
 
@@ -310,12 +282,13 @@ type="video/mp4">
 async function pesquisar(){
 
 
-const nome =
+
+const texto =
 document.getElementById("url").value.trim();
 
 
 
-if(!nome){
+if(!texto){
 
 alert("Digite o nome");
 
@@ -343,7 +316,7 @@ try{
 const res = await fetch(
 
 "/api/pesquisar?q="+
-encodeURIComponent(nome)
+encodeURIComponent(texto)
 
 );
 
@@ -362,7 +335,10 @@ throw new Error(data.erro);
 
 
 
-resultado.innerHTML="";
+
+resultado.innerHTML = "";
+
+
 
 
 
@@ -377,7 +353,11 @@ resultado.innerHTML += `
 <h3>${video.titulo}</h3>
 
 
-<p>🎤 ${video.autor}</p>
+<p>
+
+🎤 ${video.autor}
+
+</p>
 
 
 
@@ -386,6 +366,7 @@ resultado.innerHTML += `
 🎧 Áudio
 
 </button>
+
 
 
 
@@ -404,6 +385,7 @@ resultado.innerHTML += `
 
 
 });
+
 
 
 
@@ -428,6 +410,9 @@ resultado.innerHTML = `
 
 
 
+
+
+
 function baixarLink(link,tipo){
 
 
@@ -444,6 +429,111 @@ baixar(tipo);
 
 
 
+
+
+
+
+// ================= HISTÓRICO =================
+
+
+
+function mostrarHistorico(){
+
+
+
+const area =
+document.getElementById("listaHistorico");
+
+
+
+if(!area) return;
+
+
+
+if(lista.length===0){
+
+
+area.innerHTML =
+"🎵 Nenhuma música ainda";
+
+
+return;
+
+
+}
+
+
+
+area.innerHTML = "";
+
+
+
+
+
+lista.forEach((item,index)=>{
+
+
+area.innerHTML += `
+
+<div class="card">
+
+
+<b>${item.nome}</b>
+
+
+<br>
+
+${item.data || ""}
+
+
+<br><br>
+
+
+<button onclick="tocarHistorico(${index})">
+
+▶️ Abrir
+
+</button>
+
+
+
+</div>
+
+`;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+function tocarHistorico(index){
+
+
+atual=index;
+
+
+mostrar(lista[index]);
+
+
+}
+
+
+
+
+
+
+
+
+
 // ================= NAVEGAÇÃO =================
 
 
@@ -453,18 +543,24 @@ function proximo(){
 
 if(atual < lista.length-1){
 
+
 atual++;
+
 
 mostrar(lista[atual]);
 
 
 }else{
 
+
 alert("Não existe próximo");
 
-}
 
 }
+
+
+}
+
 
 
 
@@ -472,20 +568,30 @@ alert("Não existe próximo");
 function anterior(){
 
 
+
 if(atual>0){
 
+
 atual--;
+
 
 mostrar(lista[atual]);
 
 
 }else{
 
+
 alert("É o primeiro");
 
-}
 
 }
+
+
+}
+
+
+
+
 
 
 
@@ -503,16 +609,20 @@ window.baixarVideo =
 ()=>baixar("video");
 
 
+
 window.pesquisar =
 pesquisar;
+
 
 
 window.baixarLink =
 baixarLink;
 
 
+
 window.proximo =
 proximo;
+
 
 
 window.anterior =
@@ -520,9 +630,18 @@ anterior;
 
 
 
+window.tocarHistorico =
+tocarHistorico;
 
 
-// ================= LOGIN =================
+
+
+
+
+
+
+
+// ================= AUTH =================
 
 
 
@@ -531,25 +650,61 @@ auth.onAuthStateChanged(
 async user=>{
 
 
+
 if(user){
 
 
-document.getElementById("loginArea").style.display="none";
+
+document.getElementById(
+"loginArea"
+).style.display="none";
 
 
-document.getElementById("userArea").style.display="block";
+
+document.getElementById(
+"userArea"
+).style.display="block";
 
 
 
-document.getElementById("usuario").innerHTML =
+
+
+document.getElementById(
+"usuario"
+).innerHTML =
 
 "👤 "+user.email;
+
+
 
 
 
 lista =
 await carregarHistorico();
 
+
+
+
+
+mostrarHistorico();
+
+
+
+
+
+}else{
+
+
+
+document.getElementById(
+"loginArea"
+).style.display="block";
+
+
+
+document.getElementById(
+"userArea"
+).style.display="none";
 
 
 }
