@@ -1,19 +1,19 @@
 const https = require("https");
 
-const API = "https://api.cyberhost.online";
+const API_CYBERHOST = "https://api.cyberhost.online";
 
-const KEY =
+const API_KEY_CYBERHOST =
 "cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
 
 
-function cyber(body){
+function postCyber(endpoint, body){
 
 return new Promise((resolve,reject)=>{
 
 
 const data = JSON.stringify({
 
-api_key: KEY,
+api_key: API_KEY_CYBERHOST,
 
 ...body
 
@@ -23,7 +23,7 @@ api_key: KEY,
 
 const req = https.request(
 
-API + "/youtube/download",
+API_CYBERHOST + endpoint,
 
 {
 
@@ -43,28 +43,25 @@ headers:{
 (res)=>{
 
 
-let out="";
+let result="";
 
 
-res.on(
-"data",
-c=>out+=c
-);
+res.on("data",c=>result+=c);
 
 
 
-res.on(
-"end",
-()=>{
+res.on("end",()=>{
 
 
 try{
 
-resolve(JSON.parse(out));
+resolve(JSON.parse(result));
 
-}catch(e){
+}
 
-reject(new Error(out));
+catch(e){
+
+reject(new Error(result));
 
 }
 
@@ -75,27 +72,25 @@ reject(new Error(out));
 }
 
 
+
 );
 
 
 
-req.on(
-"error",
-reject
-);
-
+req.on("error",reject);
 
 
 req.write(data);
 
+
 req.end();
+
 
 
 });
 
 
 }
-
 
 
 
@@ -113,12 +108,9 @@ res.setHeader(
 try{
 
 
-const url =
-req.query.url;
+const url = req.query.url;
 
-
-const tipo =
-req.query.tipo || "audio";
+const tipo = req.query.tipo || "audio";
 
 
 
@@ -128,7 +120,7 @@ return res.json({
 
 sucesso:false,
 
-erro:"Sem link"
+erro:"Sem URL"
 
 });
 
@@ -137,52 +129,148 @@ erro:"Sem link"
 
 
 
-const data =
-await cyber({
+let endpoint;
 
-url:url,
 
-type:
+let body = {
+
+url:url
+
+};
+
+
+
+
+
+// YOUTUBE
+
+if(
+
+url.includes("youtube.com") ||
+
+url.includes("youtu.be")
+
+){
+
+
+endpoint="/youtube/download";
+
+
+body.type =
 tipo === "video"
 ?
 "video"
 :
-"audio",
+"audio";
 
 
-format:
+body.format =
 tipo === "video"
 ?
 "mp4"
 :
-"mp3",
+"mp3";
 
 
-quality:"720"
-
-});
+body.quality="720";
 
 
-
-
-
-let file =
-data.file ||
-data.download ||
-data.url;
+}
 
 
 
 
 
-if(!file){
+// TIKTOK
+
+else if(
+
+url.includes("tiktok.com")
+
+){
+
+
+endpoint="/tiktok/download";
+
+}
+
+
+
+
+
+// FACEBOOK
+
+else if(
+
+url.includes("facebook.com") ||
+
+url.includes("fb.watch")
+
+){
+
+
+endpoint="/facebook/download";
+
+}
+
+
+
+
+
+else{
 
 
 return res.json({
 
 sucesso:false,
 
-erro:"API não devolveu ficheiro",
+erro:"Link não suportado"
+
+});
+
+
+}
+
+
+
+
+
+
+
+const data = await postCyber(
+
+endpoint,
+
+body
+
+);
+
+
+
+
+
+
+let link =
+
+data.file ||
+
+data.url ||
+
+data.download;
+
+
+
+
+
+
+if(!link){
+
+
+return res.json({
+
+sucesso:false,
+
+erro:"CyberHost sem ficheiro",
 
 resposta:data
 
@@ -195,12 +283,16 @@ resposta:data
 
 
 
-if(!file.startsWith("http")){
+if(!link.startsWith("http")){
 
-file =
-API + file;
+
+link = API_CYBERHOST + link;
+
 
 }
+
+
+
 
 
 
@@ -209,9 +301,10 @@ return res.json({
 
 sucesso:true,
 
-download:file
+download:link
 
 });
+
 
 
 
@@ -231,6 +324,7 @@ erro:e.message
 
 
 }
+
 
 
 };
