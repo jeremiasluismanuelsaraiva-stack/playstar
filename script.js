@@ -8,20 +8,13 @@ carregarHistorico
 } from "./historico.js";
 
 
-
 const resultado =
 document.getElementById("resultado");
 
 
 let lista = [];
-
 let atual = -1;
 
-
-
-
-
-// ================= DOWNLOAD =================
 
 
 async function baixar(tipo){
@@ -54,17 +47,13 @@ resultado.innerHTML = `
 
 
 
-
 try{
 
 
-const controller =
-new AbortController();
+const controller = new AbortController();
 
 
-
-const tempo =
-setTimeout(()=>{
+const tempo = setTimeout(()=>{
 
 controller.abort();
 
@@ -90,9 +79,7 @@ signal:controller.signal
 
 
 
-
 clearTimeout(tempo);
-
 
 
 
@@ -101,22 +88,16 @@ await res.text();
 
 
 
-console.log(
-"RESPOSTA API:",
-texto
-);
-
+console.log("RESPOSTA API:",texto);
 
 
 
 let data;
 
 
-
 try{
 
-data =
-JSON.parse(texto);
+data = JSON.parse(texto);
 
 }
 
@@ -125,7 +106,6 @@ catch{
 throw new Error(texto);
 
 }
-
 
 
 
@@ -139,21 +119,16 @@ throw new Error(data.erro);
 
 
 
-
-const item = {
+const item={
 
 
 nome:"🎵 Música",
 
-
 url:url,
-
 
 download:data.download,
 
-
 tipo:tipo,
-
 
 data:new Date().toLocaleString()
 
@@ -166,9 +141,9 @@ data:new Date().toLocaleString()
 lista.push(item);
 
 
-
 atual =
 lista.length-1;
+
 
 
 
@@ -180,10 +155,7 @@ mostrar(item);
 
 
 
-}
-
-catch(e){
-
+}catch(e){
 
 
 if(e.name==="AbortError"){
@@ -195,10 +167,11 @@ resultado.innerHTML = `
 
 ❌ Tempo excedido
 
+API demorou muito
+
 </div>
 
 `;
-
 
 
 }else{
@@ -214,50 +187,31 @@ resultado.innerHTML = `
 
 `;
 
-}
-
 
 }
 
 
-
 }
 
 
 
+}
 
-
-
-
-// ================= PLAYER =================
 
 
 
 function mostrar(item){
 
 
-
 resultado.innerHTML = `
-
 
 <div class="card">
 
 
-<h2>
-
-${item.nome}
-
-</h2>
+<h2>${item.nome}</h2>
 
 
-
-<p>
-
-${item.data || ""}
-
-</p>
-
-
+<p>${item.data || ""}</p>
 
 
 
@@ -292,27 +246,19 @@ item.tipo==="audio"
 
 
 
-
-
 <br><br>
-
-
 
 
 <a href="${item.download}" target="_blank">
 
-⬇️ Abrir ficheiro
+⬇️ Abrir
 
 </a>
 
 
-
 </div>
 
-
 `;
-
-
 
 }
 
@@ -320,256 +266,41 @@ item.tipo==="audio"
 
 
 
+window.baixarAudio=()=>baixar("audio");
 
-
-window.baixarAudio =
-()=>baixar("audio");
-
-
-
-window.baixarVideo =
-()=>baixar("video");
+window.baixarVideo=()=>baixar("video");
 
 
 
 
-
-
-
-// ================= NEXT =================
-
-
-
-window.proximo = ()=>{
+window.proximo=()=>{
 
 
 if(atual < lista.length-1){
 
-
 atual++;
-
 
 mostrar(lista[atual]);
 
-
 }
-
 
 };
 
 
 
+window.anterior=()=>{
 
 
-window.anterior = ()=>{
-
-
-if(atual > 0){
-
+if(atual>0){
 
 atual--;
 
-
 mostrar(lista[atual]);
 
-
 }
 
-
 };
 
-
-
-
-
-
-
-
-
-// ================= MENU =================
-
-
-
-
-function esconder(){
-
-
-document.getElementById("inicio").style.display="none";
-
-
-document.getElementById("historico").style.display="none";
-
-
-document.getElementById("config").style.display="none";
-
-
-}
-
-
-
-
-
-
-window.inicio = ()=>{
-
-
-esconder();
-
-
-document.getElementById("inicio").style.display="block";
-
-
-};
-
-
-
-
-
-
-
-
-window.mostrarHistorico = ()=>{
-
-
-esconder();
-
-
-
-document.getElementById("historico").style.display="block";
-
-
-
-let box =
-document.getElementById("listaHistorico");
-
-
-
-
-if(lista.length===0){
-
-
-box.innerHTML = `
-
-<div class="card">
-
-📭 Nenhum histórico
-
-</div>
-
-`;
-
-return;
-
-
-}
-
-
-
-
-box.innerHTML = lista.map((x,i)=>`
-
-
-<div class="card">
-
-
-<h3>
-
-${x.nome}
-
-</h3>
-
-
-<p>
-
-${x.data}
-
-</p>
-
-
-
-<button onclick="tocarHistorico(${i})">
-
-▶️ Reproduzir
-
-</button>
-
-
-
-</div>
-
-
-`).join("");
-
-
-
-};
-
-
-
-
-
-
-
-window.tocarHistorico=(i)=>{
-
-
-atual=i;
-
-
-mostrar(lista[i]);
-
-
-inicio();
-
-
-};
-
-
-
-
-
-
-
-
-
-window.configuracoes=()=>{
-
-
-esconder();
-
-
-document.getElementById("config").style.display="block";
-
-
-};
-
-
-
-
-
-
-
-
-
-window.sair=()=>{
-
-
-auth.signOut();
-
-
-location.reload();
-
-
-};
-
-
-
-
-
-
-
-
-// ================= LOGIN =================
 
 
 
@@ -580,36 +311,24 @@ auth.onAuthStateChanged(async user=>{
 if(user){
 
 
-
-document.getElementById("loginArea")
-.style.display="none";
+document.getElementById("loginArea").style.display="none";
 
 
-
-document.getElementById("userArea")
-.style.display="block";
+document.getElementById("userArea").style.display="block";
 
 
 
-
-document.getElementById("usuario")
-.innerHTML =
-
+document.getElementById("usuario").innerHTML =
 
 "👤 "+user.email;
 
 
 
-
-
-lista =
-await carregarHistorico();
-
+lista = await carregarHistorico();
 
 
 
 }
-
 
 
 });
