@@ -1,10 +1,6 @@
 import "./auth.js";
 
-
-import {
-auth
-} from "./firebase.js";
-
+import { auth } from "./firebase.js";
 
 import {
 guardarHistorico,
@@ -12,14 +8,12 @@ carregarHistorico
 } from "./historico.js";
 
 
-
 const resultado =
 document.getElementById("resultado");
 
 
-let lista=[];
-
-let atual=-1;
+let lista = [];
+let atual = -1;
 
 
 
@@ -42,7 +36,11 @@ return;
 
 
 resultado.innerHTML =
-"⏳ Processando...";
+`
+<div class="card">
+⏳ Processando...
+</div>
+`;
 
 
 
@@ -51,17 +49,35 @@ try{
 
 const res =
 await fetch(
-
 "/api/baixar?url="+
 encodeURIComponent(url)+
 "&tipo="+tipo
-
 );
 
 
 
-const data =
-await res.json();
+const texto =
+await res.text();
+
+
+
+console.log("API:", texto);
+
+
+
+let data;
+
+
+try{
+
+data = JSON.parse(texto);
+
+}catch(e){
+
+throw new Error(texto);
+
+}
+
 
 
 
@@ -73,15 +89,18 @@ throw new Error(data.erro);
 
 
 
+
 let item={
 
-nome:"Vídeo",
+nome:"🎵 Música",
 
 url:url,
 
 download:data.download,
 
-tipo:tipo
+tipo:tipo,
+
+data:new Date().toLocaleString()
 
 };
 
@@ -90,7 +109,8 @@ tipo:tipo
 lista.push(item);
 
 
-atual=lista.length-1;
+atual =
+lista.length-1;
 
 
 
@@ -106,27 +126,34 @@ mostrar(item);
 
 
 resultado.innerHTML =
-"❌ "+e.message;
+`
 
+<div class="card">
+
+❌ ${e.message}
+
+</div>
+
+`;
 
 }
 
 
 }
+
+
 
 
 
 function mostrar(item){
 
 
-resultado.innerHTML=`
-
+resultado.innerHTML = `
 
 <div class="card">
 
 
-<h2>🎵 ${item.nome}</h2>
-
+<h2>${item.nome}</h2>
 
 
 ${
@@ -134,32 +161,39 @@ item.tipo==="audio"
 
 ?
 
-`<audio controls autoplay src="${item.download}"></audio>`
+`
+<audio controls autoplay>
+
+<source src="${item.download}">
+
+</audio>
+`
 
 :
 
-`<video controls autoplay src="${item.download}"></video>`
+`
+<video controls autoplay width="100%">
+
+<source src="${item.download}">
+
+</video>
+`
 
 }
 
 
 
-<br>
+<br><br>
 
 
-<button onclick="anterior()">
-⏮️
-</button>
+<a href="${item.download}" target="_blank">
 
+⬇️ Abrir ficheiro
 
-<button onclick="proximo()">
-⏭️
-</button>
-
+</a>
 
 
 </div>
-
 
 `;
 
@@ -167,13 +201,18 @@ item.tipo==="audio"
 
 
 
-window.baixarAudio=()=>baixar("audio");
-
-window.baixarVideo=()=>baixar("video");
 
 
 
-window.proximo=()=>{
+window.baixarAudio = ()=>baixar("audio");
+
+window.baixarVideo = ()=>baixar("video");
+
+
+
+
+
+window.proximo = ()=>{
 
 
 if(atual < lista.length-1){
@@ -184,15 +223,15 @@ mostrar(lista[atual]);
 
 }
 
-}
+};
 
 
 
 
-window.anterior=()=>{
+window.anterior = ()=>{
 
 
-if(atual>0){
+if(atual > 0){
 
 atual--;
 
@@ -200,7 +239,8 @@ mostrar(lista[atual]);
 
 }
 
-}
+};
+
 
 
 
@@ -218,13 +258,15 @@ document.getElementById("loginArea").style.display="none";
 document.getElementById("userArea").style.display="block";
 
 
-document.getElementById("usuario").innerHTML=
+document.getElementById("usuario").innerHTML =
+
 "👤 "+user.email;
 
 
 
 lista =
 await carregarHistorico();
+
 
 
 }
