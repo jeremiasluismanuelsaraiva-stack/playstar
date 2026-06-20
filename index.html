@@ -4,104 +4,231 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
 <title>🎵 Meu Player</title>
 
+
 <link rel="stylesheet" href="style.css">
 
+
 </head>
+
 
 
 <body>
 
 
+
 <div class="container">
 
 
-<h1>🎵 Meu Player</h1>
-
-
-<div id="loginArea">
-
-<input id="email" placeholder="Gmail">
-
-<input id="senha" type="password" placeholder="Senha">
-
-
-<button onclick="criarConta()">
-Criar Conta
-</button>
-
-
-<button onclick="entrar()">
-Entrar
-</button>
-
-
-<button onclick="googleLogin()">
-🔵 Google
-</button>
-
-</div>
 
 
 
-<div id="userArea" style="display:none">
+<!-- TITULO -->
+
+<h1>
+🎵 Meu Player
+</h1>
 
 
-<p id="usuario"></p>
-
-<button onclick="sair()">
-Sair
-</button>
 
 
-</div>
 
+
+
+
+<!-- LOGIN -->
+
+<div id="loginArea" class="card">
+
+
+<h2>
+🔐 Conta
+</h2>
 
 
 
 <input 
-id="url"
-placeholder="Cole YouTube, TikTok ou Facebook">
+id="email" 
+placeholder="Gmail">
+
+
+
+<input 
+id="senha" 
+type="password" 
+placeholder="Senha">
+
+
 
 
 
 <div class="buttons">
 
 
-<button onclick="baixarAudio()">
-🎧 Áudio
+
+<button onclick="criarConta()">
+
+Criar Conta
+
 </button>
+
+
+
+
+
+<button onclick="entrar()">
+
+Entrar
+
+</button>
+
+
+
+
+
+<button onclick="googleLogin()" class="google-btn">
+
+
+<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+
+
+Continuar com Google
+
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- USUARIO LOGADO -->
+
+<div id="userArea" style="display:none;" class="card">
+
+
+<p id="usuario"></p>
+
+
+
+<button onclick="sair()">
+
+🚪 Sair
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- PESQUISA -->
+
+<div class="search">
+
+
+
+<input
+
+id="url"
+
+placeholder="Pesquisar música ou colar link">
+
+
+
+
+
+<button onclick="pesquisar()">
+
+🔎 Pesquisar
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- DOWNLOAD -->
+
+<div class="buttons">
+
+
+
+<button onclick="baixarAudio()">
+
+🎧 Áudio
+
+</button>
+
+
+
 
 
 <button onclick="baixarVideo()">
+
 🎬 Vídeo
+
 </button>
 
 
+
 </div>
 
 
 
+
+
+
+
+
+
+<!-- PLAYER -->
 
 <div id="resultado">
 
+
 <div class="card">
+
 
 🎵 Nenhum link carregado
 
-</div>
 
-</div>
-
+<br>
 
 
+⚡ YouTube | TikTok | Facebook
 
-<div id="historico">
-
-<h2>📜 Histórico</h2>
 
 
 </div>
@@ -112,9 +239,92 @@ placeholder="Cole YouTube, TikTok ou Facebook">
 
 
 
-<script type="module" src="script.js"></script>
+
+
+
+
+
+<!-- CONTROLES -->
+
+<div class="buttons">
+
+
+<button onclick="anterior()">
+
+⏮️ Anterior
+
+</button>
+
+
+
+
+<button onclick="proximo()">
+
+⏭️ Próximo
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- HISTORICO -->
+
+<div id="historico" class="card">
+
+
+<h2>
+
+📜 Histórico
+
+</h2>
+
+
+
+<div id="listaHistorico">
+
+
+Nenhuma música ainda
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<script 
+type="module" 
+src="script.js">
+</script>
+
 
 
 </body>
 
-</html> organize bem nao estraggue
+</html>
