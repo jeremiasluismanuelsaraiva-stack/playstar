@@ -1,24 +1,19 @@
 const https = require("https");
 
-
-const API =
-"https://api.cyberhost.online";
-
+const API = "https://api.cyberhost.online";
 
 const KEY =
 "cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
 
 
-
 function cyber(body){
-
 
 return new Promise((resolve,reject)=>{
 
 
-let data = JSON.stringify({
+const data = JSON.stringify({
 
-api_key:KEY,
+api_key: KEY,
 
 ...body
 
@@ -26,9 +21,9 @@ api_key:KEY,
 
 
 
-let req=https.request(
+const req = https.request(
 
-API+"/youtube/download",
+API + "/youtube/download",
 
 {
 
@@ -38,15 +33,14 @@ headers:{
 
 "Content-Type":"application/json",
 
-"Content-Length":
-Buffer.byteLength(data)
+"Content-Length":Buffer.byteLength(data)
 
 }
 
 },
 
 
-res=>{
+(res)=>{
 
 
 let out="";
@@ -56,6 +50,7 @@ res.on(
 "data",
 c=>out+=c
 );
+
 
 
 res.on(
@@ -80,7 +75,6 @@ reject(new Error(out));
 }
 
 
-
 );
 
 
@@ -91,10 +85,10 @@ reject
 );
 
 
+
 req.write(data);
 
 req.end();
-
 
 
 });
@@ -142,13 +136,14 @@ erro:"Sem link"
 
 
 
+
 const data =
 await cyber({
 
 url:url,
 
 type:
-tipo==="video"
+tipo === "video"
 ?
 "video"
 :
@@ -156,7 +151,7 @@ tipo==="video"
 
 
 format:
-tipo==="video"
+tipo === "video"
 ?
 "mp4"
 :
@@ -164,7 +159,6 @@ tipo==="video"
 
 
 quality:"720"
-
 
 });
 
@@ -180,6 +174,7 @@ data.url;
 
 
 
+
 if(!file){
 
 
@@ -187,7 +182,7 @@ return res.json({
 
 sucesso:false,
 
-erro:"Sem ficheiro",
+erro:"API não devolveu ficheiro",
 
 resposta:data
 
@@ -199,20 +194,18 @@ resposta:data
 
 
 
+
 if(!file.startsWith("http")){
 
-
 file =
-API+file;
-
+API + file;
 
 }
 
 
 
 
-
-res.json({
+return res.json({
 
 sucesso:true,
 
@@ -223,10 +216,12 @@ download:file
 
 
 
+
 }catch(e){
 
 
-res.status(500).json({
+
+return res.status(500).json({
 
 sucesso:false,
 
