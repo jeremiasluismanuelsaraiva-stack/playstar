@@ -86,9 +86,7 @@ req.write(data);
 req.end();
 
 
-
 });
-
 
 }
 
@@ -141,7 +139,6 @@ url:url
 
 
 
-
 // YOUTUBE
 
 if(
@@ -183,14 +180,11 @@ body.quality="720";
 
 // TIKTOK
 
-else if(
-
-url.includes("tiktok.com")
-
-){
+else if(url.includes("tiktok.com")){
 
 
 endpoint="/tiktok/download";
+
 
 }
 
@@ -210,6 +204,7 @@ url.includes("fb.watch")
 
 
 endpoint="/facebook/download";
+
 
 }
 
@@ -249,15 +244,13 @@ body
 
 
 
-
-let link =
+const link =
 
 data.file ||
 
-data.url ||
+data.download ||
 
-data.download;
-
+data.url;
 
 
 
@@ -270,7 +263,7 @@ return res.json({
 
 sucesso:false,
 
-erro:"CyberHost sem ficheiro",
+erro:"Sem ficheiro na resposta",
 
 resposta:data
 
@@ -282,26 +275,21 @@ resposta:data
 
 
 
-
-if(!link.startsWith("http")){
-
-
-link = API_CYBERHOST + link;
-
-
-}
-
-
-
-
-
-
-
 return res.json({
 
 sucesso:true,
 
-download:link
+download:
+
+link.startsWith("http")
+
+?
+
+link
+
+:
+
+API_CYBERHOST + link
 
 });
 
