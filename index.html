@@ -4,11 +4,14 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>🎵 Meu Player</title>
 
+
 <link rel="stylesheet" href="style.css">
+
 
 </head>
 
@@ -16,55 +19,149 @@
 <body>
 
 
+
 <div class="container">
+
+
+
+<!-- MENU TOPO -->
+
+<div class="topbar">
 
 
 <h1>🎵 Meu Player</h1>
 
 
-<div id="loginArea">
-
-<input id="email" placeholder="Gmail">
-
-<input id="senha" type="password" placeholder="Senha">
+<div class="menu">
 
 
-<button onclick="criarConta()">
-Criar Conta
+<button onclick="inicio()">
+🏠 Início
 </button>
 
 
-<button onclick="entrar()">
-Entrar
+<button onclick="mostrarHistorico()">
+📜 Histórico
 </button>
 
 
-<button onclick="googleLogin()">
-🔵 Google
-</button>
-
-</div>
-
-
-
-<div id="userArea" style="display:none">
-
-
-<p id="usuario"></p>
-
-<button onclick="sair()">
-Sair
+<button onclick="configuracoes()">
+⚙️ Config
 </button>
 
 
 </div>
 
+
+</div>
+
+
+
+
+
+
+<!-- LOGIN -->
+
+
+<div id="loginArea" class="card">
+
+
+<h2>🔐 Entrar</h2>
+
+
+<input 
+id="email"
+placeholder="Gmail">
 
 
 
 <input 
+id="senha"
+type="password"
+placeholder="Senha">
+
+
+
+<div class="buttons">
+
+
+<button onclick="criarConta()">
+
+Criar Conta
+
+</button>
+
+
+
+<button onclick="entrar()">
+
+Entrar
+
+</button>
+
+
+
+<button onclick="googleLogin()">
+
+🔵 Google
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- CONTA -->
+
+
+<div id="userArea" 
+class="card"
+style="display:none;">
+
+
+<p id="usuario">
+
+👤 Usuário
+
+</p>
+
+
+<button onclick="sair()">
+
+🚪 Sair
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- PLAYER -->
+
+
+<div id="inicio">
+
+
+<input 
+
 id="url"
+
 placeholder="Cole YouTube, TikTok ou Facebook">
+
+
 
 
 
@@ -72,36 +169,41 @@ placeholder="Cole YouTube, TikTok ou Facebook">
 
 
 <button onclick="baixarAudio()">
+
 🎧 Áudio
+
 </button>
 
 
+
 <button onclick="baixarVideo()">
+
 🎬 Vídeo
+
 </button>
 
 
 </div>
+
+
+
 
 
 
 
 <div id="resultado">
 
+
 <div class="card">
+
 
 🎵 Nenhum link carregado
 
-</div>
 
-</div>
-
+<br>
 
 
-
-<div id="historico">
-
-<h2>📜 Histórico</h2>
+⚡ YouTube | TikTok | Facebook
 
 
 </div>
@@ -111,8 +213,101 @@ placeholder="Cole YouTube, TikTok ou Facebook">
 
 
 
+</div>
 
-<script type="module" src="script.js"></script>
+
+
+
+
+
+
+<!-- HISTÓRICO -->
+
+
+<div id="historico" 
+style="display:none;">
+
+
+
+<h2>
+
+📜 Histórico
+
+</h2>
+
+
+
+<div id="listaHistorico">
+
+
+Nenhum histórico
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- CONFIG -->
+
+
+<div id="config" 
+style="display:none;">
+
+
+
+<h2>
+
+⚙️ Configurações
+
+</h2>
+
+
+
+<div class="card">
+
+
+Tema: Escuro
+
+
+<br><br>
+
+
+<button onclick="location.reload()">
+
+🔄 Atualizar
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+<script 
+type="module" 
+src="script.js">
+
+</script>
+
 
 
 </body>
