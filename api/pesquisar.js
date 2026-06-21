@@ -1,7 +1,6 @@
 // api/pesquisar.js
 
 const API = "https://api.cyberhost.online";
-
 const KEY = "cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
 
 
@@ -9,20 +8,16 @@ export default async function handler(req,res){
 
 try{
 
-
 const q = req.query.q;
 
-
 if(!q){
-
 return res.json({
 resultados:[]
 });
-
 }
 
 
-// SE FOR LINK DIRETO
+// LINK DIRETO
 
 if(
 q.includes("youtube.com") ||
@@ -33,17 +28,13 @@ q.includes("instagram.com")
 ){
 
 return res.json({
-
-resultados:[{
-
+resultados:[
+{
 titulo:"Link encontrado",
-
 artista:"PLAYSTAR",
-
 url:q
-
-}]
-
+}
+]
 });
 
 }
@@ -57,21 +48,35 @@ API +
 "/youtube/search?q=" +
 encodeURIComponent(q),
 {
-
 headers:{
-"x-api-key":KEY
+"api_key": KEY
 }
-
 });
 
 
-const data = await r.json();
+const texto = await r.text();
+
+
+console.log("CYBER:",texto);
+
+
+let data;
+
+try{
+data = JSON.parse(texto);
+}catch{
+return res.json({
+erro:"Resposta não JSON",
+resposta:texto
+});
+}
 
 
 
 const lista =
 data.results ||
 data.data ||
+data.result ||
 [];
 
 
@@ -97,7 +102,8 @@ x.artist ||
 url:
 x.url ||
 x.link ||
-x.video_url
+x.video_url ||
+x.webpage_url
 
 
 }))
@@ -109,18 +115,12 @@ x.video_url
 
 }catch(e){
 
-
 console.log(e);
 
-
 return res.status(500).json({
-
 erro:e.message
-
 });
 
-
 }
-
 
 }
