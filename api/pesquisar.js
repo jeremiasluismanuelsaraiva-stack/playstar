@@ -1,57 +1,52 @@
+// =============================
+// PLAYSTAR PESQUISA
+// api/pesquisar.js
+// =============================
+
+
 const https = require("https");
 
-const API_CYBERHOST =
+
+const API =
 "https://api.cyberhost.online";
 
-const API_KEY =
+
+const KEY =
 "cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
 
 
-function postCyber(body){
+
+function cyber(q){
 
 return new Promise((resolve,reject)=>{
 
 
-const data = JSON.stringify({
-
-api_key:API_KEY,
-
-...body
-
-});
+const url =
+API+
+"/youtube/search?q="+
+encodeURIComponent(q);
 
 
 
-const req = https.request(
-
-API_CYBERHOST + "/youtube/search",
-
+https.get(
+url,
 {
-
-method:"POST",
-
 headers:{
-
-"Content-Type":"application/json",
-
-"Content-Length":
-Buffer.byteLength(data)
-
+"x-api-key":KEY
 }
-
 },
-
 
 res=>{
 
 
-let result="";
+let data="";
 
 
 res.on(
 "data",
-c=>result+=c
+c=>data+=c
 );
+
 
 
 res.on(
@@ -61,13 +56,15 @@ res.on(
 
 try{
 
-resolve(JSON.parse(result));
 
-}
+resolve(
+JSON.parse(data)
+);
 
-catch(e){
 
-reject(new Error(result));
+}catch(e){
+
+reject(e);
 
 }
 
@@ -78,26 +75,14 @@ reject(new Error(result));
 }
 
 
-
-);
-
-
-
-req.on(
+).on(
 "error",
 reject
 );
 
 
 
-req.write(data);
-
-req.end();
-
-
-
 });
-
 
 }
 
@@ -105,7 +90,9 @@ req.end();
 
 
 
-module.exports = async(req,res)=>{
+
+module.exports =
+async(req,res)=>{
 
 
 res.setHeader(
@@ -127,9 +114,7 @@ if(!q){
 
 return res.json({
 
-sucesso:false,
-
-erro:"Sem pesquisa"
+resultados:[]
 
 });
 
@@ -137,50 +122,40 @@ erro:"Sem pesquisa"
 
 
 
-
-
 const data =
-await postCyber({
-
-query:q
-
-});
-
+await cyber(q);
 
 
 
 
 const lista =
 data.results ||
-data.items ||
 data.data ||
 [];
 
 
 
 
-
 const resultados =
-lista.map(v=>({
+lista.map(m=>({
 
 
 titulo:
-v.title ||
-v.titulo ||
+m.title ||
+m.name ||
 "Sem título",
 
 
-autor:
-v.author ||
-v.channel ||
+artista:
+m.artist ||
+m.author ||
 "Desconhecido",
 
 
 url:
-v.url ||
-v.link ||
-v.videoUrl
-
+m.url ||
+m.link ||
+""
 
 
 }));
@@ -188,16 +163,11 @@ v.videoUrl
 
 
 
+res.json({
 
-return res.json({
-
-sucesso:true,
-
-resultados:resultados
-
+resultados
 
 });
-
 
 
 
@@ -205,9 +175,10 @@ resultados:resultados
 }catch(e){
 
 
-return res.status(500).json({
+console.log(e);
 
-sucesso:false,
+
+res.status(500).json({
 
 erro:e.message
 
