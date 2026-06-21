@@ -1,118 +1,176 @@
-// PLAYSTAR PESQUISA MUSICA
+ API = "https://api.cyberhost.online";
 
-const API =
-"https://api.cyberhost.online";
-
-const KEY =
-"cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
+const KEY = "cyber_f857ee31300990f3451d1a6826f99const";
 
 
 export default async function handler(req,res){
 
-
 try{
 
+const url = req.query.url;
+const tipo = req.query.tipo || "audio";
 
-const q =
-req.query.q;
+
+if(!url){
+return res.json({
+sucesso:false,
+erro:"Sem link"
+});
+}
 
 
-if(!q){
+let endpoint="";
+let body={
+url:url
+};
+
+
+// YOUTUBE
+if(
+url.includes("youtube.com") ||
+url.includes("youtu.be")
+){
+
+endpoint="/youtube/download";
+
+body.type =
+tipo === "video"
+? "video"
+: "audio";
+
+body.format =
+tipo === "video"
+? "mp4"
+: "mp3";
+
+}
+
+
+// TIKTOK
+else if(url.includes("tiktok.com")){
+
+endpoint="/tiktok/download";
+
+body.type =
+tipo === "video"
+? "video"
+: "audio";
+
+body.format =
+tipo === "video"
+? "mp4"
+: "mp3";
+
+}
+
+
+// INSTAGRAM
+else if(url.includes("instagram.com")){
+
+endpoint="/instagram/download";
+
+body.type =
+tipo === "video"
+? "video"
+: "audio";
+
+body.format =
+tipo === "video"
+? "mp4"
+: "mp3";
+
+}
+
+
+// FACEBOOK
+else if(
+url.includes("facebook.com") ||
+url.includes("fb.watch")
+){
+
+endpoint="/facebook/download";
+
+body.type =
+tipo === "video"
+? "video"
+: "audio";
+
+body.format =
+tipo === "video"
+? "mp4"
+: "mp3";
+
+}
+
+
+else {
 
 return res.json({
 sucesso:false,
-erro:"Digite uma música"
+erro:"Link não suportado"
 });
 
 }
 
 
 
-const resposta =
-await fetch(
-API+"/youtube/search",
+const r = await fetch(
+API + endpoint,
 {
-
 method:"POST",
-
 headers:{
 "Content-Type":"application/json"
 },
-
 body:JSON.stringify({
-
 api_key:KEY,
-
-q:q,
-
-limit:10
-
+...body
 })
-
 });
 
 
-
-const data =
-await resposta.json();
+const data = await r.json();
 
 
+const link =
+data.file ||
+data.download ||
+data.url ||
+data.video ||
+data.audio;
 
-const musicas =
-data.results ||
-data.data ||
-[];
+
+
+if(!link){
+
+return res.json({
+sucesso:false,
+erro:"Sem arquivo",
+resposta:data
+});
+
+}
 
 
 
-res.json({
-
+return res.json({
 sucesso:true,
+download:
+link.startsWith("http")
+? link
+: API + link,
 
-resultados:
-musicas.map(m=>({
-
-
-titulo:
-m.title ||
-m.name,
-
-
-artista:
-m.artist ||
-m.author ||
-"Desconhecido",
-
-
-url:
-m.url ||
-m.link,
-
-
-capa:
-m.thumbnail ||
-m.image
-
-
-}))
-
+title:data.title || "",
+artist:data.artist || ""
 });
-
 
 
 }catch(e){
 
-
-res.json({
-
+return res.status(500).json({
 sucesso:false,
-
 erro:e.message
-
 });
 
-
 }
 
-
-}
+}13b74d52f0a
