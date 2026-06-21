@@ -2,140 +2,148 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial;
+font-family:Arial,sans-serif;
 }
-
 
 body{
-
-background:
-linear-gradient(
-135deg,
-#020617,
-#000,
-#7f1d1d
-);
-
+background:#121212;
 color:white;
-
 min-height:100vh;
+}
 
-display:flex;
-justify-content:center;
-align-items:center;
-
+.app{
+max-width:900px;
+margin:auto;
 padding:20px;
-
+padding-bottom:120px;
 }
 
-
-
-.container{
-
-width:100%;
-max-width:700px;
-
-background:#020617;
-
-padding:30px;
-
-border-radius:20px;
-
-text-align:center;
-
-}
-
-
-
-h1{
-
-color:#38bdf8;
-
-font-size:40px;
-
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
 margin-bottom:20px;
-
 }
 
-
-
-input{
-
-width:100%;
-
-padding:15px;
-
-margin:8px;
-
-border-radius:10px;
-
-background:#111827;
-
-color:white;
-
-font-size:18px;
-
+.topbar h1{
+color:#1DB954;
 }
 
-
+#userArea{
+display:flex;
+align-items:center;
+gap:10px;
+}
 
 button{
-
-padding:14px 25px;
-
-margin:5px;
-
-border:0;
-
-border-radius:10px;
-
-background:#2563eb;
-
+background:#1DB954;
 color:white;
-
-font-size:18px;
-
+border:none;
+padding:12px 18px;
+border-radius:8px;
 cursor:pointer;
-
+font-weight:bold;
 }
-
-
 
 button:hover{
-
-background:#dc2626;
-
+opacity:.9;
 }
 
+.google-btn{
+background:white;
+color:black;
+width:100%;
+margin-top:10px;
+}
 
+input{
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+background:#222;
+color:white;
+margin-bottom:10px;
+}
 
 .card{
-
-background:#111827;
-
-padding:20px;
-
-margin-top:20px;
-
+background:#181818;
+padding:15px;
 border-radius:15px;
-
-font-size:20px;
-
+margin-bottom:15px;
 }
 
+.search-box{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
 
+.search-box input{
+margin:0;
+}
 
-audio,video{
+#resultado .card{
+margin-bottom:10px;
+}
 
+.musica{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+border-bottom:1px solid #333;
+}
+
+.musica:last-child{
+border:none;
+}
+
+.musica h3{
+font-size:16px;
+}
+
+.musica p{
+font-size:13px;
+color:#aaa;
+}
+
+.player{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#181818;
+border-top:1px solid #333;
+padding:15px;
+}
+
+.player-info{
+text-align:center;
+margin-bottom:10px;
+}
+
+.player-buttons{
+display:flex;
+justify-content:center;
+gap:15px;
+}
+
+.player-buttons button{
+width:50px;
+height:50px;
+border-radius:50%;
+}
+
+audio,
+video{
 width:100%;
-
-margin-top:15px;
-
+margin-top:10px;
+border-radius:10px;
 }
 
-
-#historico{
-
-margin-top:25px;
-
+#historico div,
+#favoritos div{
+padding:8px;
+border-bottom:1px solid #333;
 }
