@@ -8,14 +8,12 @@ font-family:Arial,sans-serif;
 body{
 background:#121212;
 color:white;
-min-height:100vh;
 }
 
-.app{
+.container{
 max-width:900px;
 margin:auto;
 padding:20px;
-padding-bottom:120px;
 }
 
 .topbar{
@@ -25,8 +23,129 @@ align-items:center;
 margin-bottom:20px;
 }
 
-.topbar h1{
+.logo{
+font-size:28px;
+font-weight:bold;
 color:#1DB954;
+}
+
+.card{
+background:#181818;
+padding:20px;
+border-radius:15px;
+margin-bottom:15px;
+box-shadow:0 0 10px rgba(0,0,0,.3);
+}
+
+input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+margin-bottom:10px;
+background:#282828;
+color:white;
+}
+
+input::placeholder{
+color:#b3b3b3;
+}
+
+button{
+border:none;
+border-radius:10px;
+padding:12px 18px;
+cursor:pointer;
+font-weight:bold;
+transition:.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+button{
+background:#1DB954;
+color:white;
+}
+
+.google-btn{
+width:100%;
+margin-top:10px;
+background:white;
+color:black;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+}
+
+.search{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+.search input{
+margin:0;
+}
+
+.search button{
+min-width:120px;
+}
+
+.player{
+text-align:center;
+}
+
+.cover{
+width:220px;
+height:220px;
+border-radius:15px;
+object-fit:cover;
+margin-bottom:15px;
+}
+
+audio{
+width:100%;
+margin-top:15px;
+}
+
+.controls{
+margin-top:15px;
+display:flex;
+justify-content:center;
+gap:10px;
+}
+
+.controls button{
+font-size:20px;
+}
+
+#historico div,
+#favoritos div{
+background:#282828;
+padding:10px;
+border-radius:10px;
+margin-top:8px;
+cursor:pointer;
+}
+
+#historico div:hover,
+#favoritos div:hover
+
+#resultado .card{
+text-align:left;
+}
+
+#resultado h3{
+color:#1DB954;
+margin-bottom:5px;
+}
+
+#resultado button{
+margin-right:5px;
+margin-top:10px;
 }
 
 #userArea{
@@ -35,115 +154,23 @@ align-items:center;
 gap:10px;
 }
 
-button{
-background:#1DB954;
-color:white;
-border:none;
-padding:12px 18px;
-border-radius:8px;
-cursor:pointer;
+#usuario{
 font-weight:bold;
 }
 
-button:hover{
-opacity:.9;
+@media(max-width:700px){
+
+.search{
+flex-direction:column;
 }
 
-.google-btn{
-background:white;
-color:black;
+.search button{
 width:100%;
-margin-top:10px;
 }
 
-input{
-width:100%;
-padding:14px;
-border:none;
-border-radius:10px;
-background:#222;
-color:white;
-margin-bottom:10px;
+.cover{
+width:180px;
+height:180px;
 }
 
-.card{
-background:#181818;
-padding:15px;
-border-radius:15px;
-margin-bottom:15px;
-}
-
-.search-box{
-display:flex;
-gap:10px;
-margin-bottom:20px;
-}
-
-.search-box input{
-margin:0;
-}
-
-#resultado .card{
-margin-bottom:10px;
-}
-
-.musica{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:10px;
-border-bottom:1px solid #333;
-}
-
-.musica:last-child{
-border:none;
-}
-
-.musica h3{
-font-size:16px;
-}
-
-.musica p{
-font-size:13px;
-color:#aaa;
-}
-
-.player{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-background:#181818;
-border-top:1px solid #333;
-padding:15px;
-}
-
-.player-info{
-text-align:center;
-margin-bottom:10px;
-}
-
-.player-buttons{
-display:flex;
-justify-content:center;
-gap:15px;
-}
-
-.player-buttons button{
-width:50px;
-height:50px;
-border-radius:50%;
-}
-
-audio,
-video{
-width:100%;
-margin-top:10px;
-border-radius:10px;
-}
-
-#historico div,
-#favoritos div{
-padding:8px;
-border-bottom:1px solid #333;
 }
