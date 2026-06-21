@@ -58,8 +58,6 @@ resultado.innerHTML = `
 
 
 
-
-
 try{
 
 
@@ -71,14 +69,80 @@ encodeURIComponent(texto)
 
 
 
-const data =
-await res.json();
+const resposta =
+await res.text();
+
+
+
+console.log(
+"RESPOSTA API:",
+resposta
+);
+
+
+
+let data;
+
+
+
+try{
+
+
+data =
+JSON.parse(resposta);
+
+
+}catch(e){
+
+
+resultado.innerHTML = `
+
+<div class="card">
+
+❌ Erro API:
+
+<br><br>
+
+${resposta}
+
+</div>
+
+`;
+
+return;
+
+
+}
+
+
 
 
 
 const musicas =
 data.resultados ||
 [];
+
+
+
+
+
+if(!musicas.length){
+
+
+resultado.innerHTML = `
+
+<div class="card">
+
+❌ Nenhuma música encontrada
+
+</div>
+
+`;
+
+return;
+
+
+}
 
 
 
@@ -97,7 +161,8 @@ const div =
 document.createElement("div");
 
 
-div.className="card";
+div.className =
+"card";
 
 
 
@@ -122,15 +187,13 @@ div.innerHTML = `
 
 
 
-
 div.querySelector("button")
-.onclick=()=>{
-
+.onclick = ()=>{
 
 baixarMusica(m);
 
-
 };
+
 
 
 
@@ -142,23 +205,27 @@ resultado.appendChild(div);
 
 
 
+
+
 }catch(e){
 
 
-resultado.innerHTML=
+resultado.innerHTML = `
 
-`
 <div class="card">
 
 ❌ ${e.message}
 
 </div>
+
 `;
 
 }
 
 
+
 }
+
 
 
 
@@ -168,7 +235,7 @@ resultado.innerHTML=
 
 
 // =====================
-// BAIXAR
+// BAIXAR E TOCAR
 // =====================
 
 
@@ -178,12 +245,17 @@ async function baixarMusica(m){
 
 resultado.innerHTML = `
 
+<div class="card">
+
 ⏳ Baixando ${m.titulo}
+
+</div>
 
 `;
 
 
 
+try{
 
 
 const res =
@@ -197,24 +269,32 @@ encodeURIComponent(m.url)+
 
 
 
-const data =
-await res.json();
+const resposta =
+await res.text();
+
+
+
+let data =
+JSON.parse(resposta);
 
 
 
 
 if(!data.sucesso){
 
-alert(data.erro);
 
-return;
+throw new Error(
+data.erro
+);
+
 
 }
 
 
 
 
-const item={
+
+const item = {
 
 
 nome:
@@ -222,16 +302,21 @@ data.title ||
 m.titulo,
 
 
+
 artista:
 data.artist ||
 m.artista,
+
 
 
 download:
 data.download,
 
 
-tipo:"audio",
+
+tipo:
+"audio",
+
 
 
 data:
@@ -239,8 +324,8 @@ new Date()
 .toLocaleString()
 
 
-};
 
+};
 
 
 
@@ -248,9 +333,9 @@ new Date()
 historico.push(item);
 
 
+
 atual =
 historico.length-1;
-
 
 
 
@@ -260,6 +345,23 @@ await guardarHistorico(item)
 
 
 mostrarPlayer(item);
+
+
+
+}catch(e){
+
+
+resultado.innerHTML = `
+
+<div class="card">
+
+❌ ${e.message}
+
+</div>
+
+`;
+
+}
 
 
 
@@ -279,6 +381,7 @@ mostrarPlayer(item);
 
 
 function mostrarPlayer(item){
+
 
 
 document
@@ -307,7 +410,9 @@ audio.src =
 item.download;
 
 
+
 audio.play();
+
 
 
 
@@ -318,15 +423,17 @@ audio.play();
 
 
 
-// =====================
-// NAVEGAÇÃO
-// =====================
+
+
 
 
 function proximo(){
 
 
-if(atual < historico.length-1){
+
+if(
+atual < historico.length-1
+){
 
 
 atual++;
@@ -335,6 +442,7 @@ atual++;
 mostrarPlayer(
 historico[atual]
 );
+
 
 
 }else{
@@ -353,7 +461,11 @@ alert(
 
 
 
+
+
+
 function anterior(){
+
 
 
 if(atual>0){
@@ -365,6 +477,7 @@ atual--;
 mostrarPlayer(
 historico[atual]
 );
+
 
 
 }else{
@@ -386,6 +499,13 @@ alert(
 
 
 
+
+
+// =====================
+// EXPORTAR BOTÕES
+// =====================
+
+
 window.pesquisar =
 pesquisar;
 
@@ -398,6 +518,7 @@ window.anterior =
 anterior;
 
 
+
 window.tocarAtual =
 ()=>{};
 
@@ -408,8 +529,9 @@ window.tocarAtual =
 
 
 
+
 // =====================
-// FIREBASE LOGIN
+// LOGIN
 // =====================
 
 
@@ -421,28 +543,33 @@ async user=>{
 if(user){
 
 
+
 document
 .getElementById("loginArea")
-.style.display="none";
+.style.display =
+"none";
 
 
 
 document
 .getElementById("userArea")
-.style.display="block";
+.style.display =
+"block";
 
 
 
 document
 .getElementById("usuario")
-.innerHTML=
-
+.innerHTML =
 "👤 "+user.email;
+
+
 
 
 
 historico =
 await carregarHistorico();
+
 
 
 
@@ -452,13 +579,15 @@ await carregarHistorico();
 
 document
 .getElementById("loginArea")
-.style.display="block";
+.style.display =
+"block";
 
 
 
 document
 .getElementById("userArea")
-.style.display="none";
+.style.display =
+"none";
 
 
 
