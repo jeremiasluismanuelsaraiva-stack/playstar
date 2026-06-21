@@ -1,144 +1,48 @@
-<!DOCTYPE html>
-<html lang="pt">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>🎵 PLAYSTAR</title>
-
-<link rel="stylesheet" href="style.css">
-
-</head>
-
-
-<body>
-
-
-<header class="topbar">
-
-<h1>🎵 PLAYSTAR</h1>
-
-
-<div id="userArea">
-
-<span id="usuario">
-Não ligado
-</span>
-
-
-<button onclick="sair()">
-Sair
-</button>
-
-
-</div>
-
-</header>
-
-
-
-
-
-<div id="loginArea" class="card">
-
-
-<h2>Entrar</h2>
-
+<!-- LOGIN -->
 
 <input
 id="email"
 type="email"
-placeholder="Email"
->
+placeholder="Email">
 
 
 <input
 id="senha"
 type="password"
-placeholder="Senha"
->
+placeholder="Senha">
 
 
-<button onclick="entrar()">
-Entrar
-</button>
-
-
-
-<button onclick="criarConta()">
-Criar Conta
-</button>
-
-
-
-
-<button 
-class="google-btn"
-onclick="googleLogin()">
-
-
+<button>
 🌐 Continuar com Google
-
-
 </button>
 
 
-</div>
 
-
-
-
-
-
-<div class="search-box">
-
+<!-- PESQUISA -->
 
 <input
-
 id="searchInput"
-
-placeholder="🔍 Pesquisar música..."
-
->
+placeholder="🔍 Pesquisar música...">
 
 
 <button onclick="pesquisar()">
-
 Pesquisar
-
 </button>
 
 
-</div>
 
-
-
-
-
+<!-- RESULTADOS -->
 
 <div id="resultado">
-
-
-<div class="card">
 
 🎵 Pesquise uma música
 
 </div>
 
 
-</div>
 
 
-
-
-
-
-
-<div id="player" class="card">
-
+<!-- PLAYER -->
 
 <img
 
@@ -146,28 +50,17 @@ id="cover"
 
 src="assets/default-cover.jpg"
 
-
-width="200"
-
-
->
+width="200">
 
 
-
-<h2 id="nomeMusica">
-
+<h3 id="nomeMusica">
 Nenhuma música
-
-</h2>
-
-
-
-<h3 id="nomeArtista">
-
----
-
 </h3>
 
+
+<p id="nomeArtista">
+
+</p>
 
 
 
@@ -180,10 +73,7 @@ controls
 
 style="width:100%">
 
-
 </audio>
-
-
 
 
 
@@ -215,49 +105,17 @@ style="width:100%">
 
 
 
-<button onclick="favoritarAtual()">
+<button onclick="favoritar()">
 
 ❤️
 
 </button>
 
 
-
-</div>
-
-
 </div>
 
 
 
-
-
-
-
-
-<div class="card">
-
-
-<h2>
-📚 Histórico
-</h2>
-
-
-<div id="historico">
-
-Nenhuma música
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-<div class="card">
 
 
 <h2>
@@ -267,25 +125,8 @@ Nenhuma música
 </h2>
 
 
-
 <div id="favoritos">
 
 Nenhum favorito
 
 </div>
-
-
-</div>
-
-
-
-
-
-
-
-<script type="module" src="script.js"></script>
-
-
-</body>
-
-</html>
