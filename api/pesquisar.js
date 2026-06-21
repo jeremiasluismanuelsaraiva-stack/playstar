@@ -1,71 +1,97 @@
-export default async function handler(req, res) {
+const API =
+"https://api.cyberhost.online";
 
-try {
+
+const KEY =
+"cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
+
+
+
+export default async function handler(req,res){
+
+
+try{
+
 
 const q = req.query.q;
 
-if (!q) {
+
+if(!q){
+
 return res.status(400).json({
+
 erro:"Falta pesquisa"
+
 });
+
 }
 
 
-// se for link usa direto
-let url = null;
 
-if (
+// Se for link direto
+
+if(
 q.includes("youtube.com") ||
 q.includes("youtu.be")
 ){
-url = q;
-}
 
-
-// ======================
-// LINK YOUTUBE
-// ======================
-
-if(url){
 
 return res.json({
+
 resultados:[
+
 {
+
 titulo:"YouTube",
+
 artista:"Vídeo encontrado",
-url:url
+
+url:q
+
 }
+
 ]
+
 });
 
 }
 
 
 
-// ======================
-// PESQUISA POR NOME
-// ======================
-
-
-const api =
-`https://api.cyberhost.online/youtube/search?q=${encodeURIComponent(q)}`;
+// Pesquisa por nome
 
 
 const response =
-await fetch(api,{
+await fetch(
+
+`${API}/youtube/search?q=${encodeURIComponent(q)}`,
+
+{
+
 headers:{
-"x-api-key":"cyber_f857ee31300990f3451d1a6826f9913b74d52f0a"
+
+"x-api-key":KEY,
+
+"Content-Type":"application/json"
+
 }
-});
+
+}
+
+);
 
 
 
 const data =
-await response.json();
+await response.json()
+.catch(()=>({}));
+
+
 
 
 
 const resultados =
+
 data.results ||
 data.data ||
 [];
@@ -74,30 +100,39 @@ data.data ||
 
 
 
-res.json({
+return res.json({
 
 resultados:
+
 resultados.map(x=>({
 
 titulo:
+
 x.title ||
 x.titulo ||
 "Sem título",
 
 
 artista:
+
 x.author ||
 x.artist ||
 "Desconhecido",
 
 
 url:
+
 x.url ||
-x.link
+x.link ||
+x.video_url
+
 
 }))
 
+
 });
+
+
 
 
 
@@ -107,7 +142,7 @@ x.link
 console.log(e);
 
 
-res.status(500).json({
+return res.status(500).json({
 
 erro:e.message
 
@@ -115,5 +150,6 @@ erro:e.message
 
 
 }
+
 
 }
