@@ -2,14 +2,9 @@
   "name": "playstar",
   "version": "1.0.0",
   "private": true,
-
   "type": "module",
 
-  "scripts": {
-    "build": "echo build-ok"
-  },
-
   "dependencies": {
-    "firebase": "^10.12.2"
+    "firebase": "10.12.2"
   }
 }
