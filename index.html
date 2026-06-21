@@ -1,48 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>🎵 PLAYSTAR</title>
+
+
+<link rel="stylesheet" href="style.css">
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+
+<h1>🎵 PLAYSTAR</h1>
+
+
+
 <!-- LOGIN -->
 
+<div id="loginArea">
+
+
 <input
+
 id="email"
+
 type="email"
+
 placeholder="Email">
 
 
 <input
+
 id="senha"
+
 type="password"
+
 placeholder="Senha">
 
 
+
 <button>
+
+🔐 Entrar
+
+</button>
+
+
+
+<button>
+
 🌐 Continuar com Google
+
 </button>
 
 
-
-<!-- PESQUISA -->
-
-<input
-id="searchInput"
-placeholder="🔍 Pesquisar música...">
-
-
-<button onclick="pesquisar()">
-Pesquisar
-</button>
-
-
-
-<!-- RESULTADOS -->
-
-<div id="resultado">
-
-🎵 Pesquise uma música
 
 </div>
 
 
 
 
+
+<!-- USUARIO -->
+
+
+<div id="userArea" style="display:none">
+
+
+<p id="usuario">
+
+👤 Usuário
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- PESQUISA -->
+
+
+<div class="search">
+
+
+<input
+
+id="searchInput"
+
+placeholder="🔍 Pesquisar música...">
+
+
+
+<button onclick="pesquisar()">
+
+Pesquisar
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- RESULTADOS -->
+
+
+<div id="resultado">
+
+
+<div class="card">
+
+
+🎵 Pesquise uma música
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
 <!-- PLAYER -->
+
+
+<div class="card">
+
 
 <img
 
@@ -53,14 +163,23 @@ src="assets/default-cover.jpg"
 width="200">
 
 
-<h3 id="nomeMusica">
+
+
+
+<h2 id="nomeMusica">
+
 Nenhuma música
-</h3>
+
+</h2>
+
 
 
 <p id="nomeArtista">
 
+🎤
+
 </p>
+
 
 
 
@@ -69,11 +188,10 @@ Nenhuma música
 
 id="audioPlayer"
 
-controls
-
-style="width:100%">
+controls>
 
 </audio>
+
 
 
 
@@ -89,6 +207,7 @@ style="width:100%">
 
 
 
+
 <button onclick="tocarAtual()">
 
 ▶️
@@ -97,11 +216,13 @@ style="width:100%">
 
 
 
+
 <button onclick="proximo()">
 
 ⏭️
 
 </button>
+
 
 
 
@@ -116,6 +237,42 @@ style="width:100%">
 
 
 
+</div>
+
+
+
+
+
+
+
+
+
+<!-- HISTORICO -->
+
+
+<div id="historico">
+
+
+<h2>
+
+🎧 Histórico
+
+</h2>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- FAVORITOS -->
+
+
+<div id="favoritos">
 
 
 <h2>
@@ -125,8 +282,33 @@ style="width:100%">
 </h2>
 
 
-<div id="favoritos">
+<p>
 
 Nenhum favorito
 
+</p>
+
+
 </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<script type="module" src="script.js"></script>
+
+
+
+</body>
+
+
+</html>
