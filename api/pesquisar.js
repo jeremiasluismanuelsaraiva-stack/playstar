@@ -54,7 +54,7 @@ const api =
 const response =
 await fetch(api,{
 headers:{
-"x-api-key":"SUA_API_KEY"
+"x-api-key":"cyber_f857ee31300990f3451d1a6826f9913b74d52f0a"
 }
 });
 
