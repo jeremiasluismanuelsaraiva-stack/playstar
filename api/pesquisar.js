@@ -1,98 +1,10 @@
 // =============================
-// PLAYSTAR PESQUISAR MÚSICAS
+// PLAYSTAR PESQUISA
 // api/pesquisar.js
 // =============================
 
-const https = require("https");
 
-
-const API =
-"https://api.cyberhost.online";
-
-
-const KEY =
-"cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
-
-
-
-function requestAPI(endpoint){
-
-
-return new Promise((resolve,reject)=>{
-
-
-https.get(
-
-endpoint,
-
-{
-headers:{
-"x-api-key":KEY
-}
-},
-
-res=>{
-
-
-let data="";
-
-
-res.on(
-"data",
-c=>data+=c
-);
-
-
-
-res.on(
-"end",
-()=>{
-
-
-try{
-
-resolve(
-JSON.parse(data)
-);
-
-
-}catch(e){
-
-reject(
-new Error(data)
-);
-
-}
-
-
-}
-
-
-);
-
-
-}
-
-
-).on(
-"error",
-reject
-);
-
-
-
-});
-
-
-}
-
-
-
-
-
-
-
-module.exports = async(req,res)=>{
+module.exports = async (req,res)=>{
 
 
 res.setHeader(
@@ -112,10 +24,67 @@ req.query.q;
 
 if(!q){
 
-
 return res.json({
-
+sucesso:true,
 resultados:[]
+});
+
+}
+
+
+
+const url =
+"https://api.cyberhost.online/youtube/search?q="
++
+encodeURIComponent(q);
+
+
+
+const resposta =
+await fetch(
+url,
+{
+headers:{
+"x-api-key":
+"cyber_f857ee31300990f3451d1a6826f9913b74d52f0a"
+}
+}
+);
+
+
+
+const texto =
+await resposta.text();
+
+
+
+console.log(
+"PESQUISA:",
+texto
+);
+
+
+
+let data;
+
+
+
+try{
+
+data =
+JSON.parse(texto);
+
+}catch(e){
+
+
+return res.status(500).json({
+
+sucesso:false,
+
+erro:
+"API retornou texto inválido",
+
+resposta:texto.substring(0,200)
 
 });
 
@@ -126,63 +95,46 @@ resultados:[]
 
 
 
-const api =
-
-await requestAPI(
-
-`${API}/youtube/search?q=${encodeURIComponent(q)}`
-
-);
-
-
-
-
-
 const lista =
 
-api.results ||
-api.data ||
-api.items ||
+data.results ||
+data.data ||
+data.items ||
 [];
 
 
 
 
 
-const resultados =
-
-lista.map(x=>({
+const resultados = lista.map(m=>({
 
 
 titulo:
-
-x.title ||
-x.name ||
-"Sem título",
+m.title ||
+m.name ||
+"Sem nome",
 
 
 
 artista:
-
-x.artist ||
-x.author ||
+m.artist ||
+m.author ||
 "Desconhecido",
 
 
 
 url:
-
-x.url ||
-x.link ||
-x.video_url ||
+m.url ||
+m.link ||
+m.video_url ||
+m.webpage_url ||
 "",
 
 
 
 imagem:
-
-x.thumbnail ||
-x.image ||
+m.thumbnail ||
+m.image ||
 ""
 
 
@@ -191,9 +143,7 @@ x.image ||
 
 
 
-
-
-res.json({
+return res.json({
 
 sucesso:true,
 
@@ -205,18 +155,17 @@ resultados
 
 
 
-
 }catch(e){
 
 
 console.log(
-"ERRO PESQUISA:",
-e.message
+"ERRO PLAYSTAR:",
+e
 );
 
 
 
-res.status(500).json({
+return res.status(500).json({
 
 sucesso:false,
 
@@ -224,8 +173,8 @@ erro:e.message
 
 });
 
-}
 
+}
 
 
 };
