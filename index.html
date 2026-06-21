@@ -2,137 +2,418 @@
 <html lang="pt">
 
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>🎵 PLAYSTAR</title>
+<title>🎵 PlayStar</title>
+
 
 <link rel="stylesheet" href="style.css">
+
+
 </head>
+
 
 <body>
 
-<div class="app">
 
-    <!-- TOPO -->
-    <header class="topbar">
-        <h1>🎵 PLAYSTAR</h1>
+<!-- TOPO -->
 
-        <div id="userArea">
-            <span id="usuario">Não ligado</span>
-            <button onclick="sair()">Sair</button>
-        </div>
-    </header>
+<header class="topbar">
 
-    <!-- LOGIN -->
-    <div id="loginArea" class="card">
 
-        <h2>Entrar</h2>
+<h1>
+🎵 PLAYSTAR
+</h1>
 
-        <input id="email" type="email" placeholder="Gmail">
 
-        <input id="senha" type="password" placeholder="Senha">
 
-        <button onclick="entrar()">
-            Entrar
-        </button>
+<div id="userArea">
 
-        <button onclick="criarConta()">
-            Criar Conta
-        </button>
 
-        <button class="google-btn" onclick="googleLogin()">
-            Continuar com Google
-        </button>
+<span id="usuario">
+Não ligado
+</span>
 
-    </div>
 
-    <!-- PESQUISA -->
-    <div class="search-box">
+<button onclick="sair()">
+Sair
+</button>
 
-        <input
-            id="url"
-            placeholder="Pesquisar música ou colar link">
-
-        <button onclick="pesquisar()">
-            🔍 Pesquisar
-        </button>
-
-    </div>
-
-    <!-- RESULTADOS -->
-    <div id="resultado">
-
-        <div class="card">
-
-            🎵 Pesquise uma música
-
-        </div>
-
-    </div>
-
-    <!-- PLAYER -->
-    <div id="player">
-
-        <div class="player-info">
-
-            <h3 id="nomeMusica">
-                Nenhuma música
-            </h3>
-
-            <p id="nomeArtista">
-                ---
-            </p>
-
-        </div>
-
-        <div class="player-buttons">
-
-            <button onclick="anterior()">
-                ⏮️
-            </button>
-
-            <button onclick="baixarAudio()">
-                ▶️
-            </button>
-
-            <button onclick="proximo()">
-                ⏭️
-            </button>
-
-            <button>
-                ❤️
-            </button>
-
-        </div>
-
-    </div>
-
-    <!-- HISTORICO -->
-    <div class="card">
-
-        <h2>📚 Histórico</h2>
-
-        <div id="historico">
-            Nenhuma música
-        </div>
-
-    </div>
-
-    <!-- FAVORITOS -->
-    <div class="card">
-
-        <h2>❤️ Favoritos</h2>
-
-        <div id="favoritos">
-            Nenhum favorito
-        </div>
-
-    </div>
 
 </div>
 
+
+</header>
+
+
+
+
+
+
+
+<!-- LOGIN -->
+
+
+<div id="loginArea" class="card">
+
+
+<h2>
+🔐 Entrar
+</h2>
+
+
+
+<input
+
+id="email"
+
+type="email"
+
+placeholder="Email"
+
+>
+
+
+
+<input
+
+id="senha"
+
+type="password"
+
+placeholder="Senha"
+
+>
+
+
+
+
+<button onclick="entrar()">
+
+Entrar
+
+</button>
+
+
+
+
+
+<button onclick="criarConta()">
+
+Criar Conta
+
+</button>
+
+
+
+
+
+<button 
+class="google-btn"
+
+onclick="googleLogin()">
+
+
+🌐 Continuar com Google
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- PESQUISA -->
+
+
+<div class="search-box">
+
+
+<input
+
+
+id="searchInput"
+
+
+placeholder="🔍 Pesquisar música..."
+
+>
+
+
+
+<button onclick="pesquisar()">
+
+Pesquisar
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- RESULTADOS -->
+
+
+<div id="resultado">
+
+
+<div class="card">
+
+
+🎵 Pesquise uma música
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- PLAYER -->
+
+
+<div id="player" class="card">
+
+
+
+<img
+
+
+id="cover"
+
+
+src="assets/default-cover.jpg"
+
+
+>
+
+
+
+
+
+
+<h2 id="nomeMusica">
+
+
+Nenhuma música
+
+
+</h2>
+
+
+
+
+
+<h3 id="nomeArtista">
+
+
+---
+
+
+</h3>
+
+
+
+
+
+
+<audio
+
+
+id="audioPlayer"
+
+
+controls
+
+
+>
+
+
+</audio>
+
+
+
+
+
+
+
+<div class="player-buttons">
+
+
+
+<button onclick="anterior()">
+
+⏮️
+
+</button>
+
+
+
+
+
+<button onclick="tocarAtual()">
+
+▶️
+
+</button>
+
+
+
+
+
+
+<button onclick="proximo()">
+
+⏭️
+
+</button>
+
+
+
+
+
+
+
+<button onclick="favoritarAtual()">
+
+❤️
+
+</button>
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- HISTORICO -->
+
+
+<div class="card">
+
+
+<h2>
+
+📚 Histórico
+
+</h2>
+
+
+
+
+<div id="historico">
+
+
+Nenhuma música
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- FAVORITOS -->
+
+
+<div class="card">
+
+
+<h2>
+
+❤️ Favoritos
+
+</h2>
+
+
+
+
+<div id="favoritos">
+
+
+Nenhum favorito
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script type="module" src="script.js"></script>
 
+
 </body>
+
 </html>
