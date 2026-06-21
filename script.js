@@ -8,27 +8,28 @@ carregarHistorico
 } from "./historico.js";
 
 
+console.log("🎵 PLAYSTAR ONLINE");
+
 
 const resultado =
 document.getElementById("resultado");
 
 
-let lista = [];
-
+let historico = [];
 let atual = -1;
 
 
 
-
-
-// ================= DOWNLOAD =================
-
+// ===========================
+// DOWNLOAD PLAYSTAR
+// ===========================
 
 async function baixar(tipo){
 
 
 const url =
-document.getElementById("url").value.trim();
+document.getElementById("url")
+.value.trim();
 
 
 
@@ -46,7 +47,7 @@ resultado.innerHTML = `
 
 <div class="card">
 
-⏳ Processando...
+⏳ Preparando sua música...
 
 </div>
 
@@ -57,59 +58,55 @@ resultado.innerHTML = `
 try{
 
 
-const res = await fetch(
+const resposta =
+await fetch(
 
-"/api/baixar?url="+
-encodeURIComponent(url)+
-"&tipo="+tipo
+`/api/baixar?url=${encodeURIComponent(url)}&tipo=${tipo}`
 
 );
 
 
 
-const texto =
-await res.text();
-
-
-
-console.log("API:",texto);
-
-
-
 const data =
-JSON.parse(texto);
+await resposta.json();
 
 
 
 if(!data.sucesso){
 
-throw new Error(data.erro);
+throw new Error(
+data.erro ||
+"Erro ao baixar"
+);
 
 }
 
 
 
 
-const item = {
+const item={
 
 
 nome:
 data.title ||
-data.titulo ||
-"🎵 Música",
+"🎵 Música sem nome",
 
 
-url:url,
+artista:
+data.artist ||
+"PlayStar",
 
 
-download:data.download,
+download:
+data.download,
 
 
-tipo:tipo,
+tipo,
 
 
 data:
-new Date().toLocaleString()
+new Date()
+.toLocaleString()
 
 
 };
@@ -117,33 +114,27 @@ new Date().toLocaleString()
 
 
 
-lista.push(item);
-
+historico.push(item);
 
 
 atual =
-lista.length-1;
+historico.length-1;
 
 
 
-await guardarHistorico(item);
+await guardarHistorico(item)
+.catch(()=>{});
 
 
 
-mostrarHistorico();
-
-
-
-mostrar(item);
-
+mostrarPlayer(item);
 
 
 
 }catch(e){
 
 
-
-resultado.innerHTML = `
+resultado.innerHTML=`
 
 <div class="card">
 
@@ -156,69 +147,72 @@ resultado.innerHTML = `
 }
 
 
-
 }
 
 
 
 
 
+// ===========================
+// PLAYER
+// ===========================
+
+
+function mostrarPlayer(item){
 
 
 
-
-// ================= PLAYER =================
-
-
-
-function mostrar(item){
-
-
-
-resultado.innerHTML = `
+resultado.innerHTML=`
 
 <div class="card">
 
 
-<h2>${item.nome}</h2>
+<h2>
+🎵 ${item.nome}
+</h2>
 
 
-<p>${item.data || ""}</p>
-
-
+<h3>
+🎤 ${item.artista}
+</h3>
 
 
 ${
+
 item.tipo==="audio"
+
 
 ?
 
 `
 
-<audio controls autoplay style="width:100%">
+<audio id="player"
+controls
+autoplay
+>
 
-<source src="${item.download}"
+<source 
+src="${item.download}"
 type="audio/mpeg">
 
 </audio>
 
 `
 
+
 :
+
 
 `
 
 <video
-
 controls
-
 autoplay
+width="100%"
+>
 
-playsinline
-
-width="100%">
-
-<source src="${item.download}"
+<source 
+src="${item.download}"
 type="video/mp4">
 
 </video>
@@ -229,13 +223,12 @@ type="video/mp4">
 
 
 
-<br><br>
-
+<div class="controls">
 
 
 <button onclick="anterior()">
 
-⏮️ Anterior
+⏮️
 
 </button>
 
@@ -243,136 +236,15 @@ type="video/mp4">
 
 <button onclick="proximo()">
 
-⏭️ Próximo
+⏭️
 
 </button>
 
 
 
-<br><br>
+<button>
 
-
-
-<a href="${item.download}" target="_blank">
-
-⬇️ Abrir ficheiro
-
-</a>
-
-
-
-</div>
-
-`;
-
-}
-
-
-
-
-
-
-
-
-
-// ================= PESQUISA =================
-
-
-
-async function pesquisar(){
-
-
-
-const texto =
-document.getElementById("url").value.trim();
-
-
-
-if(!texto){
-
-alert("Digite o nome");
-
-return;
-
-}
-
-
-
-resultado.innerHTML = `
-
-<div class="card">
-
-🔎 Pesquisando...
-
-</div>
-
-`;
-
-
-
-try{
-
-
-const res = await fetch(
-
-"/api/pesquisar?q="+
-encodeURIComponent(texto)
-
-);
-
-
-
-const data =
-await res.json();
-
-
-
-if(!data.sucesso){
-
-throw new Error(data.erro);
-
-}
-
-
-
-
-resultado.innerHTML = "";
-
-
-
-
-
-data.resultados.forEach(video=>{
-
-
-resultado.innerHTML += `
-
-<div class="card">
-
-
-<h3>${video.titulo}</h3>
-
-
-<p>
-
-🎤 ${video.autor}
-
-</p>
-
-
-
-<button onclick="baixarLink('${video.url}','audio')">
-
-🎧 Áudio
-
-</button>
-
-
-
-
-<button onclick="baixarLink('${video.url}','video')">
-
-🎬 Vídeo
+❤️
 
 </button>
 
@@ -380,121 +252,6 @@ resultado.innerHTML += `
 
 </div>
 
-`;
-
-
-
-});
-
-
-
-
-}catch(e){
-
-
-resultado.innerHTML = `
-
-<div class="card">
-
-❌ ${e.message}
-
-</div>
-
-`;
-
-}
-
-
-}
-
-
-
-
-
-
-
-function baixarLink(link,tipo){
-
-
-document.getElementById("url").value =
-link;
-
-
-baixar(tipo);
-
-
-}
-
-
-
-
-
-
-
-
-
-// ================= HISTÓRICO =================
-
-
-
-function mostrarHistorico(){
-
-
-
-const area =
-document.getElementById("listaHistorico");
-
-
-
-if(!area) return;
-
-
-
-if(lista.length===0){
-
-
-area.innerHTML =
-"🎵 Nenhuma música ainda";
-
-
-return;
-
-
-}
-
-
-
-area.innerHTML = "";
-
-
-
-
-
-lista.forEach((item,index)=>{
-
-
-area.innerHTML += `
-
-<div class="card">
-
-
-<b>${item.nome}</b>
-
-
-<br>
-
-${item.data || ""}
-
-
-<br><br>
-
-
-<button onclick="tocarHistorico(${index})">
-
-▶️ Abrir
-
-</button>
-
 
 
 </div>
@@ -503,10 +260,6 @@ ${item.data || ""}
 
 
 
-});
-
-
-
 }
 
 
@@ -515,45 +268,33 @@ ${item.data || ""}
 
 
 
-function tocarHistorico(index){
-
-
-atual=index;
-
-
-mostrar(lista[index]);
-
-
-}
-
-
-
-
-
-
-
-
-
-// ================= NAVEGAÇÃO =================
-
+// ===========================
+// PLAYLIST
+// ===========================
 
 
 function proximo(){
 
 
-if(atual < lista.length-1){
+if(
+atual < historico.length-1
+){
 
 
 atual++;
 
 
-mostrar(lista[atual]);
+mostrarPlayer(
+historico[atual]
+);
 
 
 }else{
 
 
-alert("Não existe próximo");
+alert(
+"Fim da playlist"
+);
 
 
 }
@@ -568,20 +309,24 @@ alert("Não existe próximo");
 function anterior(){
 
 
-
 if(atual>0){
 
 
 atual--;
 
 
-mostrar(lista[atual]);
+mostrarPlayer(
+historico[atual]
+);
+
 
 
 }else{
 
 
-alert("É o primeiro");
+alert(
+"Primeira música"
+);
 
 
 }
@@ -593,30 +338,92 @@ alert("É o primeiro");
 
 
 
+// ===========================
+// PESQUISA
+// ===========================
+
+
+async function pesquisar(){
+
+
+const texto =
+document
+.getElementById("searchInput")
+.value;
+
+
+
+const res =
+await fetch(
+"/api/pesquisar?q="+
+encodeURIComponent(texto)
+);
+
+
+
+const musicas =
+await res.json();
+
+
+
+resultado.innerHTML="";
+
+
+
+musicas.forEach((m)=>{
+
+
+resultado.innerHTML += `
+
+
+<div class="music">
+
+
+🎵 ${m.nome}
+
+<br>
+
+🎤 ${m.artista}
+
+
+<button onclick="baixar('audio')">
+
+▶️
+
+</button>
+
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
 
 
 
 
-// ================= WINDOW =================
 
+
+
+
+// ===========================
+// BOTÕES HTML
+// ===========================
 
 
 window.baixarAudio =
 ()=>baixar("audio");
 
 
+
 window.baixarVideo =
 ()=>baixar("video");
-
-
-
-window.pesquisar =
-pesquisar;
-
-
-
-window.baixarLink =
-baixarLink;
 
 
 
@@ -630,8 +437,8 @@ anterior;
 
 
 
-window.tocarHistorico =
-tocarHistorico;
+window.pesquisar =
+pesquisar;
 
 
 
@@ -641,8 +448,9 @@ tocarHistorico;
 
 
 
-// ================= AUTH =================
-
+// ===========================
+// FIREBASE LOGIN
+// ===========================
 
 
 auth.onAuthStateChanged(
@@ -650,61 +458,46 @@ auth.onAuthStateChanged(
 async user=>{
 
 
-
 if(user){
 
 
 
-document.getElementById(
-"loginArea"
-).style.display="none";
+document
+.getElementById("loginArea")
+.style.display="none";
 
 
 
-document.getElementById(
-"userArea"
-).style.display="block";
+document
+.getElementById("userArea")
+.style.display="block";
 
 
 
-
-
-document.getElementById(
-"usuario"
-).innerHTML =
+document
+.getElementById("usuario")
+.innerHTML=
 
 "👤 "+user.email;
 
 
 
-
-
-lista =
+historico =
 await carregarHistorico();
-
-
-
-
-
-mostrarHistorico();
-
-
 
 
 
 }else{
 
 
-
-document.getElementById(
-"loginArea"
-).style.display="block";
-
+document
+.getElementById("loginArea")
+.style.display="block";
 
 
-document.getElementById(
-"userArea"
-).style.display="none";
+document
+.getElementById("userArea")
+.style.display="none";
 
 
 }
