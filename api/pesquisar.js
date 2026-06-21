@@ -1,7 +1,4 @@
-// =============================
-// PLAYSTAR PESQUISA DE MÚSICAS
 // api/pesquisar.js
-// =============================
 
 const https = require("https");
 
@@ -15,115 +12,7 @@ const KEY =
 
 
 
-function chamarAPI(q){
-
-return new Promise((resolve,reject)=>{
-
-
-const body =
-JSON.stringify({
-
-api_key: KEY,
-
-q: q
-
-});
-
-
-
-const req =
-https.request(
-
-API + "/youtube/search",
-
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"application/json",
-
-"Content-Length":
-Buffer.byteLength(body)
-
-}
-
-},
-
-
-(res)=>{
-
-
-let texto="";
-
-
-
-res.on(
-"data",
-chunk=>{
-texto+=chunk;
-}
-);
-
-
-
-res.on(
-"end",
-()=>{
-
-
-try{
-
-resolve(
-JSON.parse(texto)
-);
-
-
-}catch(e){
-
-reject(
-new Error(texto)
-);
-
-}
-
-
-});
-
-
-}
-
-
-);
-
-
-
-req.on(
-"error",
-reject
-);
-
-
-
-req.write(body);
-
-req.end();
-
-
-
-});
-
-
-}
-
-
-
-
-
-
-
-module.exports = async(req,res)=>{
+module.exports = async (req,res)=>{
 
 
 res.setHeader(
@@ -140,24 +29,76 @@ const q =
 req.query.q;
 
 
-
 if(!q){
 
 return res.json({
-
 resultados:[]
-
 });
 
 }
 
 
 
+const body =
+JSON.stringify({
+
+api_key:KEY,
+
+q:q
+
+});
 
 
-const data =
-await chamarAPI(q);
 
+const resposta =
+await fetch(
+API+"/youtube/search",
+{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body
+}
+);
+
+
+
+const texto =
+await resposta.text();
+
+
+
+console.log(
+"CYBER RESPOSTA:",
+texto
+);
+
+
+
+
+let data;
+
+
+try{
+
+data =
+JSON.parse(texto);
+
+
+}catch{
+
+
+return res.json({
+
+resultados:[],
+
+erro:texto
+
+});
+
+
+}
 
 
 
@@ -165,53 +106,34 @@ await chamarAPI(q);
 const lista =
 data.results ||
 data.data ||
-data.items ||
 [];
-
-
-
-
-
-
-const resultados =
-lista.map(item=>({
-
-
-titulo:
-item.title ||
-item.name ||
-"Sem título",
-
-
-
-artista:
-item.artist ||
-item.channel ||
-"Desconhecido",
-
-
-
-url:
-item.url ||
-item.link ||
-item.webpage_url ||
-""
-
-
-
-}));
-
-
 
 
 
 
 res.json({
 
-resultados
+resultados:
+lista.map(x=>({
+
+
+titulo:
+x.title || "Sem título",
+
+
+artista:
+x.artist || x.channel || "Desconhecido",
+
+
+url:
+x.url || x.link || ""
+
+
+
+}))
+
 
 });
-
 
 
 
@@ -219,17 +141,12 @@ resultados
 }catch(e){
 
 
-console.log(
-"ERRO PESQUISA:",
-e.message
-);
-
+console.log(e);
 
 
 res.status(500).json({
 
-erro:
-e.message
+erro:e.message
 
 });
 
