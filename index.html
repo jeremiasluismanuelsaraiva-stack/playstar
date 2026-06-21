@@ -9,9 +9,7 @@
 
 <title>🎵 PLAYSTAR</title>
 
-
 <link rel="stylesheet" href="style.css">
-
 
 </head>
 
@@ -22,49 +20,33 @@
 <div class="container">
 
 
-
 <h1>🎵 PLAYSTAR</h1>
 
 
-
-<!-- LOGIN -->
 
 <div id="loginArea">
 
 
 <input
-
 id="email"
-
 type="email"
-
 placeholder="Email">
 
 
 <input
-
 id="senha"
-
 type="password"
-
 placeholder="Senha">
 
 
-
-<button>
-
+<button onclick="login()">
 🔐 Entrar
-
 </button>
 
 
-
-<button>
-
+<button onclick="googleLogin()">
 🌐 Continuar com Google
-
 </button>
-
 
 
 </div>
@@ -73,16 +55,11 @@ placeholder="Senha">
 
 
 
-<!-- USUARIO -->
-
-
 <div id="userArea" style="display:none">
 
 
 <p id="usuario">
-
 👤 Usuário
-
 </p>
 
 
@@ -93,10 +70,6 @@ placeholder="Senha">
 
 
 
-
-<!-- PESQUISA -->
-
-
 <div class="search">
 
 
@@ -105,7 +78,6 @@ placeholder="Senha">
 id="searchInput"
 
 placeholder="🔍 Pesquisar música...">
-
 
 
 <button onclick="pesquisar()">
@@ -123,18 +95,13 @@ Pesquisar
 
 
 
-<!-- RESULTADOS -->
-
-
 <div id="resultado">
 
 
 <div class="card">
 
-
 🎵 Pesquise uma música
 
-
 </div>
 
 
@@ -144,11 +111,6 @@ Pesquisar
 
 
 
-
-
-
-
-<!-- PLAYER -->
 
 
 <div class="card">
@@ -164,8 +126,6 @@ width="200">
 
 
 
-
-
 <h2 id="nomeMusica">
 
 Nenhuma música
@@ -176,7 +136,7 @@ Nenhuma música
 
 <p id="nomeArtista">
 
-🎤
+🎤 Nenhum artista
 
 </p>
 
@@ -196,7 +156,7 @@ controls>
 
 
 
-<div>
+<br>
 
 
 <button onclick="anterior()">
@@ -204,7 +164,6 @@ controls>
 ⏮️
 
 </button>
-
 
 
 
@@ -216,13 +175,11 @@ controls>
 
 
 
-
 <button onclick="proximo()">
 
 ⏭️
 
 </button>
-
 
 
 
@@ -237,26 +194,14 @@ controls>
 
 
 
-</div>
 
 
-
-
-
-
-
-
-
-<!-- HISTORICO -->
 
 
 <div id="historico">
 
-
 <h2>
-
 🎧 Histórico
-
 </h2>
 
 
@@ -266,27 +211,20 @@ controls>
 
 
 
-
-
-
-<!-- FAVORITOS -->
 
 
 <div id="favoritos">
 
-
 <h2>
-
 ❤️ Favoritos
-
 </h2>
 
 
-<p>
+<div class="card">
 
 Nenhum favorito
 
-</p>
+</div>
 
 
 </div>
@@ -294,10 +232,7 @@ Nenhum favorito
 
 
 
-
 </div>
-
-
 
 
 
@@ -305,7 +240,6 @@ Nenhum favorito
 
 
 <script type="module" src="script.js"></script>
-
 
 
 </body>
