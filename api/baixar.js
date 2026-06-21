@@ -2,9 +2,10 @@ const API = "https://api.cyberhost.online";
 const KEY = "cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
 
 export default async function handler(req, res) {
+  res.setHeader("Content-Type", "application/json");
+
   try {
-    const url = req.query.url;
-    const tipo = req.query.tipo || "audio";
+    const { url, tipo = "audio" } = req.query;
 
     if (!url) {
       return res.json({
@@ -16,6 +17,7 @@ export default async function handler(req, res) {
     let endpoint = "";
     let body = { url };
 
+    // YouTube
     if (
       url.includes("youtube.com") ||
       url.includes("youtu.be")
@@ -31,16 +33,21 @@ export default async function handler(req, res) {
         tipo === "video"
           ? "mp4"
           : "mp3";
+
+      body.quality = "720";
     }
 
+    // TikTok
     else if (url.includes("tiktok.com")) {
       endpoint = "/tiktok/download";
     }
 
+    // Instagram
     else if (url.includes("instagram.com")) {
       endpoint = "/instagram/download";
     }
 
+    // Facebook
     else if (
       url.includes("facebook.com") ||
       url.includes("fb.watch")
@@ -54,6 +61,9 @@ export default async function handler(req, res) {
         erro: "Link não suportado"
       });
     }
+
+    console.log("API:", API + endpoint);
+    console.log("BODY:", body);
 
     const resposta = await fetch(
       API + endpoint,
@@ -69,21 +79,34 @@ export default async function handler(req, res) {
       }
     );
 
-    const data = await resposta.json();
+    const texto = await resposta.text();
 
-    console.log(data);
+    console.log("CYBERHOST:", texto);
+
+    let data;
+
+    try {
+      data = JSON.parse(texto);
+    } catch {
+      return res.json({
+        sucesso: false,
+        erro: "Resposta inválida da API",
+        resposta: texto
+      });
+    }
 
     const link =
       data.file ||
       data.download ||
       data.url ||
       data.video ||
-      data.audio;
+      data.audio ||
+      data.result;
 
     if (!link) {
       return res.json({
         sucesso: false,
-        erro: "Sem arquivo",
+        erro: "Sem arquivo retornado",
         resposta: data
       });
     }
@@ -93,13 +116,18 @@ export default async function handler(req, res) {
       download: link.startsWith("http")
         ? link
         : API + link,
-      title: data.title || "",
-      artist: data.artist || ""
+      title:
+        data.title ||
+        data.titulo ||
+        "Sem título",
+      artist:
+        data.artist ||
+        data.autor ||
+        ""
     });
 
   } catch (e) {
-
-    console.error(e);
+    console.error("ERRO:", e);
 
     return res.status(500).json({
       sucesso: false,
