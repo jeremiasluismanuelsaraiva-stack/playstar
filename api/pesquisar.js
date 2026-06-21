@@ -1,4 +1,7 @@
+// =============================
+// PLAYSTAR PESQUISAR MÚSICAS
 // api/pesquisar.js
+// =============================
 
 const https = require("https");
 
@@ -12,7 +15,84 @@ const KEY =
 
 
 
-module.exports = async (req,res)=>{
+function requestAPI(endpoint){
+
+
+return new Promise((resolve,reject)=>{
+
+
+https.get(
+
+endpoint,
+
+{
+headers:{
+"x-api-key":KEY
+}
+},
+
+res=>{
+
+
+let data="";
+
+
+res.on(
+"data",
+c=>data+=c
+);
+
+
+
+res.on(
+"end",
+()=>{
+
+
+try{
+
+resolve(
+JSON.parse(data)
+);
+
+
+}catch(e){
+
+reject(
+new Error(data)
+);
+
+}
+
+
+}
+
+
+);
+
+
+}
+
+
+).on(
+"error",
+reject
+);
+
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+module.exports = async(req,res)=>{
 
 
 res.setHeader(
@@ -29,111 +109,99 @@ const q =
 req.query.q;
 
 
+
 if(!q){
 
+
 return res.json({
+
 resultados:[]
+
 });
+
 
 }
 
 
 
-const body =
-JSON.stringify({
-
-api_key:KEY,
-
-q:q
-
-});
 
 
+const api =
 
-const resposta =
-await fetch(
-API+"/youtube/search",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body
-}
+await requestAPI(
+
+`${API}/youtube/search?q=${encodeURIComponent(q)}`
+
 );
 
-
-
-const texto =
-await resposta.text();
-
-
-
-console.log(
-"CYBER RESPOSTA:",
-texto
-);
-
-
-
-
-let data;
-
-
-try{
-
-data =
-JSON.parse(texto);
-
-
-}catch{
-
-
-return res.json({
-
-resultados:[],
-
-erro:texto
-
-});
-
-
-}
 
 
 
 
 const lista =
-data.results ||
-data.data ||
+
+api.results ||
+api.data ||
+api.items ||
 [];
+
+
+
+
+
+const resultados =
+
+lista.map(x=>({
+
+
+titulo:
+
+x.title ||
+x.name ||
+"Sem título",
+
+
+
+artista:
+
+x.artist ||
+x.author ||
+"Desconhecido",
+
+
+
+url:
+
+x.url ||
+x.link ||
+x.video_url ||
+"",
+
+
+
+imagem:
+
+x.thumbnail ||
+x.image ||
+""
+
+
+}));
+
+
 
 
 
 
 res.json({
 
-resultados:
-lista.map(x=>({
+sucesso:true,
 
-
-titulo:
-x.title || "Sem título",
-
-
-artista:
-x.artist || x.channel || "Desconhecido",
-
-
-url:
-x.url || x.link || ""
-
-
-
-}))
-
+resultados
 
 });
+
+
 
 
 
@@ -141,15 +209,20 @@ x.url || x.link || ""
 }catch(e){
 
 
-console.log(e);
+console.log(
+"ERRO PESQUISA:",
+e.message
+);
+
 
 
 res.status(500).json({
 
+sucesso:false,
+
 erro:e.message
 
 });
-
 
 }
 
