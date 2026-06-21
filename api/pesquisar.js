@@ -1,14 +1,11 @@
-const API =
-"https://api.cyberhost.online";
+// api/pesquisar.js
 
+const API = "https://api.cyberhost.online";
 
-const KEY =
-"cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
-
+const KEY = "cyber_f857ee31300990f3451d1a6826f9913b74d52f0a";
 
 
 export default async function handler(req,res){
-
 
 try{
 
@@ -18,39 +15,34 @@ const q = req.query.q;
 
 if(!q){
 
-return res.status(400).json({
-
-erro:"Falta pesquisa"
-
+return res.json({
+resultados:[]
 });
 
 }
 
 
-
-// Se for link direto
+// SE FOR LINK DIRETO
 
 if(
 q.includes("youtube.com") ||
-q.includes("youtu.be")
+q.includes("youtu.be") ||
+q.includes("tiktok.com") ||
+q.includes("facebook.com") ||
+q.includes("instagram.com")
 ){
-
 
 return res.json({
 
-resultados:[
+resultados:[{
 
-{
+titulo:"Link encontrado",
 
-titulo:"YouTube",
-
-artista:"Vídeo encontrado",
+artista:"PLAYSTAR",
 
 url:q
 
-}
-
-]
+}]
 
 });
 
@@ -58,45 +50,29 @@ url:q
 
 
 
-// Pesquisa por nome
+// PESQUISA
 
-
-const response =
-await fetch(
-
-`${API}/youtube/search?q=${encodeURIComponent(q)}`,
-
+const r = await fetch(
+API +
+"/youtube/search?q=" +
+encodeURIComponent(q),
 {
 
 headers:{
-
-"x-api-key":KEY,
-
-"Content-Type":"application/json"
-
+"x-api-key":KEY
 }
 
-}
-
-);
+});
 
 
-
-const data =
-await response.json()
-.catch(()=>({}));
+const data = await r.json();
 
 
 
-
-
-const resultados =
-
+const lista =
 data.results ||
 data.data ||
 [];
-
-
 
 
 
@@ -104,24 +80,21 @@ return res.json({
 
 resultados:
 
-resultados.map(x=>({
+lista.map(x=>({
 
 titulo:
-
 x.title ||
 x.titulo ||
 "Sem título",
 
 
 artista:
-
 x.author ||
 x.artist ||
 "Desconhecido",
 
 
 url:
-
 x.url ||
 x.link ||
 x.video_url
@@ -131,8 +104,6 @@ x.video_url
 
 
 });
-
-
 
 
 
