@@ -5,13 +5,11 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>🎵 PlayStar</title>
-
+<title>🎵 PLAYSTAR</title>
 
 <link rel="stylesheet" href="style.css">
-
 
 </head>
 
@@ -19,19 +17,12 @@
 <body>
 
 
-<!-- TOPO -->
-
 <header class="topbar">
 
-
-<h1>
-🎵 PLAYSTAR
-</h1>
-
+<h1>🎵 PLAYSTAR</h1>
 
 
 <div id="userArea">
-
 
 <span id="usuario">
 Não ligado
@@ -45,75 +36,47 @@ Sair
 
 </div>
 
-
 </header>
 
 
 
 
 
-
-
-<!-- LOGIN -->
-
-
 <div id="loginArea" class="card">
 
 
-<h2>
-🔐 Entrar
-</h2>
-
+<h2>Entrar</h2>
 
 
 <input
-
 id="email"
-
 type="email"
-
 placeholder="Email"
-
 >
-
 
 
 <input
-
 id="senha"
-
 type="password"
-
 placeholder="Senha"
-
 >
-
-
 
 
 <button onclick="entrar()">
-
 Entrar
-
 </button>
-
-
 
 
 
 <button onclick="criarConta()">
-
 Criar Conta
-
 </button>
-
 
 
 
 
 <button 
 class="google-btn"
-
 onclick="googleLogin()">
 
 
@@ -123,7 +86,6 @@ onclick="googleLogin()">
 </button>
 
 
-
 </div>
 
 
@@ -131,25 +93,16 @@ onclick="googleLogin()">
 
 
 
-
-
-
-<!-- PESQUISA -->
-
-
 <div class="search-box">
 
 
 <input
 
-
 id="searchInput"
-
 
 placeholder="🔍 Pesquisar música..."
 
 >
-
 
 
 <button onclick="pesquisar()">
@@ -159,20 +112,11 @@ Pesquisar
 </button>
 
 
-
 </div>
 
 
 
 
-
-
-
-
-
-
-
-<!-- RESULTADOS -->
 
 
 <div id="resultado">
@@ -180,10 +124,8 @@ Pesquisar
 
 <div class="card">
 
-
 🎵 Pesquise uma música
 
-
 </div>
 
 
@@ -193,50 +135,36 @@ Pesquisar
 
 
 
-
-
-
-
-<!-- PLAYER -->
 
 
 <div id="player" class="card">
 
 
-
 <img
-
 
 id="cover"
 
-
 src="assets/default-cover.jpg"
+
+
+width="200"
 
 
 >
 
 
 
-
-
-
 <h2 id="nomeMusica">
 
-
 Nenhuma música
-
 
 </h2>
 
 
 
-
-
 <h3 id="nomeArtista">
 
-
 ---
-
 
 </h3>
 
@@ -244,17 +172,13 @@ Nenhuma música
 
 
 
-
 <audio
-
 
 id="audioPlayer"
 
-
 controls
 
-
->
+style="width:100%">
 
 
 </audio>
@@ -264,9 +188,7 @@ controls
 
 
 
-
-<div class="player-buttons">
-
+<div>
 
 
 <button onclick="anterior()">
@@ -274,8 +196,6 @@ controls
 ⏮️
 
 </button>
-
-
 
 
 
@@ -287,18 +207,11 @@ controls
 
 
 
-
-
-
 <button onclick="proximo()">
 
 ⏭️
 
 </button>
-
-
-
-
 
 
 
@@ -310,67 +223,38 @@ controls
 
 
 
+</div>
+
 
 </div>
 
 
 
 
-</div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-<!-- HISTORICO -->
 
 
 <div class="card">
 
 
 <h2>
-
 📚 Histórico
-
 </h2>
-
-
 
 
 <div id="historico">
 
-
 Nenhuma música
 
+</div>
+
 
 </div>
 
 
 
 
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- FAVORITOS -->
 
 
 <div class="card">
@@ -384,26 +268,14 @@ Nenhuma música
 
 
 
-
 <div id="favoritos">
-
 
 Nenhum favorito
 
-
 </div>
 
 
-
-
 </div>
-
-
-
-
-
-
-
 
 
 
