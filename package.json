@@ -1,20 +1,15 @@
 {
   "name": "playstar",
   "version": "1.0.0",
-  "description": "🎵 PlayStar Music App",
+  "private": true,
 
-  "main": "index.js",
+  "type": "module",
 
   "scripts": {
-    "start": "node index.js"
+    "build": "echo build-ok"
   },
 
   "dependencies": {
-    "firebase": "^10.12.2",
-    "express": "^4.19.2"
-  },
-
-  "engines": {
-    "node": "20.x"
+    "firebase": "^10.12.2"
   }
 }
