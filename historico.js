@@ -1,29 +1,49 @@
+// ============================
+// PLAYSTAR HISTÓRICO FIREBASE
+// ============================
+
+
 import {
+
 db,
 auth
+
 } from "./firebase.js";
 
 
+
 import {
+
 collection,
 addDoc,
 getDocs,
 serverTimestamp,
 query,
 orderBy
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
 
 
-// GUARDAR
+
+
+// ============================
+// GUARDAR HISTÓRICO
+// ============================
+
 
 export async function guardarHistorico(item){
 
 
+
 if(!auth.currentUser)
+
 return;
+
 
 
 
@@ -43,22 +63,43 @@ auth.currentUser.uid,
 ),
 
 
+
 {
 
 
-nome:item.nome || "🎵 Música",
+nome:
+item.nome ||
+"🎵 Música",
 
 
-link:item.url,
+
+artista:
+item.artista ||
+"PlayStar",
 
 
-download:item.download,
+
+url:
+item.url ||
+"",
 
 
-tipo:item.tipo,
+
+download:
+item.download ||
+"",
 
 
-data:serverTimestamp()
+
+tipo:
+item.tipo ||
+"audio",
+
+
+
+data:
+serverTimestamp()
+
 
 
 }
@@ -68,6 +109,7 @@ data:serverTimestamp()
 );
 
 
+
 }
 
 
@@ -77,10 +119,13 @@ data:serverTimestamp()
 
 
 
+// ============================
+// CARREGAR HISTÓRICO
+// ============================
 
-// CARREGAR
 
 export async function carregarHistorico(){
+
 
 
 if(!auth.currentUser)
@@ -89,40 +134,66 @@ return [];
 
 
 
+
+
 let lista=[];
+
+
+
 
 
 
 const ref = collection(
 
+
 db,
+
 
 "usuarios",
 
+
 auth.currentUser.uid,
+
 
 "historico"
 
+
+
 );
+
+
 
 
 
 
 const q = query(
 
+
 ref,
 
+
 orderBy(
+
 "data",
+
 "desc"
+
 )
+
+
 
 );
 
 
 
 
-const snap = await getDocs(q);
+
+
+
+const snap =
+await getDocs(q);
+
+
 
 
 
@@ -130,17 +201,23 @@ const snap = await getDocs(q);
 snap.forEach(doc=>{
 
 
+
 lista.push({
 
+
 id:doc.id,
+
 
 ...doc.data()
 
 
+
 });
 
 
+
 });
+
 
 
 
